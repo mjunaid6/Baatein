@@ -6,7 +6,7 @@ const EndBar = () => {
             src="https://images.unsplash.com/photo-1622519407650-3df9883f76a5?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
             alt="dp" />
             <h2 className="w-[80%] text-lg">Mohammad Junaid</h2>
-            <i className="ri-settings-line text-xl cursor-pointer hover:text-purple-600"></i>
+            <i className="ri-settings-line text-xl cursor-pointer hover:text-purple-600 hover:rotate-180 transition-all duration-1000" ></i>
         </div>
     )
 }

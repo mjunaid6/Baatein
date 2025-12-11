@@ -1,5 +1,5 @@
 import InputArea from "./InputArea";
-import { chats } from "../utils/arrays";
+import { chats } from "../../utils/arrays";
 import Chats from "./Chats";
 import { useState } from "react";
 
@@ -18,6 +18,7 @@ const ChatSideBar = () => {
                 alt="dp" 
                 />
                 <h2>Aisha</h2>
+                <button className="absolute right-8 px-3 py-1 w-fit h-10 rounded-2xl bg-purple-300 cursor-pointer hover:bg-purple-400 hover:shadow-lg border border-white/30 backdrop-blur-lg">Close</button>
             </div>
 
             <div className="relative flex-1 min-h-0 flex flex-col">

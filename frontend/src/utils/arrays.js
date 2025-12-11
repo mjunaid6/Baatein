@@ -124,3 +124,16 @@ export const chats = [
   { id: "m0019", from: "U016", to: "U001", message: "Then use smooth scroll + soft shadows." },
   { id: "m0020", from: "U001", to: "U016", message: "Thanks! This is shaping into a polished chat UI." }
 ];
+
+export const requests = [
+  {
+    id: "U022",
+    name: "Rahil",
+    imageUrl: "https://randomuser.me/api/portraits/men/11.jpg"
+  },
+  {
+    id: "U032",
+    name: "John",
+    imageUrl: "https://randomuser.me/api/portraits/men/54.jpg"
+  },
+]

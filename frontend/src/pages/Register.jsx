@@ -1,13 +1,15 @@
+import BG from "./BG";
+
 const Register = () => {
     return (
         <div className="relative bg-gray-200 w-screen h-screen flex justify-center items-center overflow-hidden">
-             <div class="absolute -top-20 -left-20 w-96 h-96 bg-green-500 rounded-full blur-xl opacity-30"></div>
+             <div className="absolute -top-20 -left-20 w-96 h-96 bg-green-500 rounded-full blur-xl opacity-30"></div>
 
-             <div class="absolute -bottom-10 left-50 w-96 h-96 bg-purple-500 rounded-full blur-xl opacity-30"></div>
+             <div className="absolute -bottom-10 left-50 w-96 h-96 bg-purple-500 rounded-full blur-xl opacity-30"></div>
             
-             <div class="absolute -top-10 right-110 w-96 h-96 bg-red-500 rounded-full blur-xl opacity-30"></div>
+             <div className="absolute -top-10 right-110 w-96 h-96 bg-red-500 rounded-full blur-xl opacity-30"></div>
 
-             <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-2xl opacity-30"></div>
+             <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-2xl opacity-30"></div>
 
              <form className="w-100 h-100 bg-white/20 backdrop-blur-md rounded-2xl p-5 pb-3 flex flex-col justify-around items-center">
                 <h1 className="text-center text-3xl font-bold underline text-gray-50 mb-5">Register</h1>
