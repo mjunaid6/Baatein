@@ -100,3 +100,27 @@ export const arr = [
     imageUrl: "https://randomuser.me/api/portraits/men/28.jpg"
   },
 ];
+
+
+export const chats = [
+  { id: "m0001", from: "U016", to: "U001", message: "Hey, how are you?" },
+  { id: "m0002", from: "U001", to: "U016", message: "I'm good! Just working on a project." },
+  { id: "m0003", from: "U016", to: "U001", message: "Oh nice, what are you building?" },
+  { id: "m0004", from: "U001", to: "U016", message: "A chat UI with glassmorphism effects." },
+  { id: "m0005", from: "U016", to: "U001", message: "That sounds beautiful! Need any help?" },
+  { id: "m0006", from: "U001", to: "U016", message: "Maybe later. Still figuring out scroll handling." },
+  { id: "m0007", from: "U016", to: "U001", message: "Use flex-1 for the message area, it works great." },
+  { id: "m0008", from: "U001", to: "U016", message: "Yes, I tried it and it's perfect now!" },
+  { id: "m0009", from: "U016", to: "U001", message: "Awesome! How does the crystal background look?" },
+  { id: "m0010", from: "U001", to: "U016", message: "It looks insane now! Super premium vibe." },
+  { id: "m0011", from: "U016", to: "U001", message: "Great! Add gradient blobs for extra style." },
+  { id: "m0012", from: "U001", to: "U016", message: "Already did. The chat section looks so aesthetic." },
+  { id: "m0013", from: "U016", to: "U001", message: "Nice! Are you adding message timestamps too?" },
+  { id: "m0014", from: "U001", to: "U016", message: "Yeah, after I finish message storage." },
+  { id: "m0015", from: "U016", to: "U001", message: "Cool, let me know if you want animation ideas." },
+  { id: "m0016", from: "U001", to: "U016", message: "Sure! I might add typing dots next." },
+  { id: "m0017", from: "U016", to: "U001", message: "Typing dots always make chats feel alive." },
+  { id: "m0018", from: "U001", to: "U016", message: "True! I want to recreate a WhatsApp-like smooth feel." },
+  { id: "m0019", from: "U016", to: "U001", message: "Then use smooth scroll + soft shadows." },
+  { id: "m0020", from: "U001", to: "U016", message: "Thanks! This is shaping into a polished chat UI." }
+];
