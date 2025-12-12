@@ -1,7 +1,9 @@
+import AdminSideBar from "./AdminSideBar";
+
 const AdminPanel = () => {
     return (
         <>
-            
+            <AdminSideBar/>
         </>
     )
 }
