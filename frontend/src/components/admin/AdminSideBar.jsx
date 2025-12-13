@@ -1,4 +1,6 @@
-const AdminSideBar = () => {
+import UserBox from "./UserBox";
+
+const AdminSideBar = ({users}) => {
     return(
         <div className="flex flex-col w-[25vw] h-screen">
             <button 
@@ -8,7 +10,12 @@ const AdminSideBar = () => {
                 <i className="ri-arrow-go-back-fill"></i>
                 Back
             </button>
-        
+            {
+                users.map(user => (
+                    <UserBox user={user}/>
+                ))
+            }
+            
         </div> 
     )
 }
