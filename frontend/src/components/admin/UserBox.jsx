@@ -1,6 +1,6 @@
 const UserBox = ({user}) => {
     return(
-        <div className="w-full h-16 flex items-center gap-3 bg-blue-300 hover:bg-blue-400 cursor-alias rounded-2xl">
+        <div className="w-full h-16 flex items-center gap-3 bg-blue-300 hover:bg-blue-400 cursor-alias rounded-2xl inset-shadow-indigo-500/50 inset-shadow-sm">
             <img src={user.imageUrl} alt={user.name} className="w-10 h-10 object-cover rounded-full"/>
             <h2>{user.name}</h2>
             <div 
