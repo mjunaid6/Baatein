@@ -1,8 +1,9 @@
 import UserBox from "./UserBox";
+import "../../index.css";
 
 const AdminSideBar = ({users}) => {
     return(
-        <div className="flex flex-col w-[25vw] h-screen">
+        <div className="flex flex-col gap-3 w-[25vw] h-screen border-r-2 p-2">
             <button 
                 onClick={() => setSideBar(true)}
                 className="flex justify-center items-center text-xl font-bold border-2 border-white/50 text-white gap-2 px-2 py-1 bg-blue-400 w-full h-12 rounded-2xl hover:bg-blue-500 backdrop-blur-lg cursor-pointer"
@@ -10,11 +11,13 @@ const AdminSideBar = ({users}) => {
                 <i className="ri-arrow-go-back-fill"></i>
                 Back
             </button>
-            {
-                users.map(user => (
-                    <UserBox user={user}/>
-                ))
-            }
+            <div className="flex flex-col items-center gap-3 overflow-y-scroll hide-scroll-bar">
+                {
+                    users.map(user => (
+                        <UserBox key={user.id} user={user}/>
+                    ))
+                }
+            </div>
             
         </div> 
     )
