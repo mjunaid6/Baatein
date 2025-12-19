@@ -2,7 +2,7 @@ import BG from "./BG";
 
 const Register = () => {
     return (
-        <div className="relative bg-gray-200 w-screen h-screen flex justify-center items-center overflow-hidden">
+        <div className="relative bg-gray-300 w-screen h-screen flex justify-center items-center overflow-hidden">
              <div className="absolute -top-20 -left-20 w-96 h-96 bg-green-500 rounded-full blur-xl opacity-30"></div>
 
              <div className="absolute -bottom-10 left-50 w-96 h-96 bg-purple-500 rounded-full blur-xl opacity-30"></div>

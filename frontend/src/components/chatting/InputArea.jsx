@@ -1,6 +1,6 @@
 const InputArea = () => {
     return (
-        <form className="sticky bottom-0 w-full h-16 px-3 py-2 flex items-center gap-2 bg-white/20 backdrop-blur-2xl">
+        <form className="sticky bottom-0 w-full h-16 px-3 py-2 flex items-center gap-2 bg-white/20 backdrop-blur-2xl rounded-t-2xl">
             <div className="text-2xl right-0 text-purple-400 hover:text-purple-600 cursor-pointer">
                 <i className="ri-emotion-fill" ></i>
             </div>

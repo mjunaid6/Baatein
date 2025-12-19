@@ -8,3 +8,18 @@
 .hide-scroll-bar::-webkit-scrollbar {
   display: none; 
 }
+
+@keyframes chatFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.chat-fade-in {
+  animation: chatFadeIn 0.2s ease-out forwards;
+}

@@ -5,7 +5,7 @@ import { arr } from "../../utils/arrays";
 import SearchBar from "./SearchBar";
 import EndBar from "./EndBar";
 
-const FriendList = ({sideBar, setSideBar}) => {
+const FriendList = ({sideBar, setSideBar, setCurrFriend}) => {
     const [friends, setFriends] = useState(arr);
     return(
         <div 
@@ -23,6 +23,7 @@ const FriendList = ({sideBar, setSideBar}) => {
                 {friends.map(friend => (
                     <FriendListCard 
                         key={friend.id} 
+                        onSelect={() => setCurrFriend(friend)}
                         imgUrl={friend.imageUrl} 
                         name={friend.name}
                     />

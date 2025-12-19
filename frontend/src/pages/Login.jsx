@@ -2,7 +2,7 @@ import BG from "./BG";
 
 const Login = () => {
     return (
-        <div className="relative bg-gray-200 w-screen h-screen flex justify-center items-center overflow-hidden">
+        <div className="relative bg-gray-300 w-screen h-screen flex justify-center items-center overflow-hidden">
              <BG/>
 
              <form className="w-100 h-100 bg-white/20 backdrop-blur-md rounded-2xl p-5 pb-3 flex flex-col justify-around items-center">
@@ -13,7 +13,7 @@ const Login = () => {
                 <button className="bg-purple-300 px-3 py-1 text-lg text-white rounded-xl cursor-pointer hover:bg-purple-400">Login</button>
                 
                 <a href="#">Forgot Password?</a>
-                <a href="#">Not a User? <span className="text-green-500">Register<i class="ri-arrow-right-up-line"></i></span></a>
+                <a href="/register">Not a User? <span className="text-green-500">Register<i class="ri-arrow-right-up-line"></i></span></a>
              </form>
         </div>
     )

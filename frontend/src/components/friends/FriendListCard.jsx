@@ -1,9 +1,12 @@
 import { useState } from "react";
 
-const FriendListCard = ({imgUrl, name}) => {
+const FriendListCard = ({imgUrl, name, onSelect}) => {
     const [deleteButton,setDeleteButton] = useState(true);
     return(
-        <div className="relative flex w-full h-16 gap-2 items-center mb-2 border-2 border-purple-300 rounded-md cursor-alias hover:bg-purple-100 shadow-xl">
+        <div 
+        onClick={onSelect}
+        className="relative flex w-full h-16 gap-2 items-center mb-2 border-2 border-purple-300 rounded-md cursor-alias hover:bg-purple-100 shadow-xl"
+        >
             <div className="w-16 h-full p-2">
                 <img src={imgUrl} alt={name} className="w-full h-full rounded-full object-cover"/>
             </div>
