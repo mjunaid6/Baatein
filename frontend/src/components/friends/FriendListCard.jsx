@@ -5,7 +5,7 @@ const FriendListCard = ({imgUrl, name, onSelect}) => {
     return(
         <div 
         onClick={onSelect}
-        className="relative flex w-full h-16 gap-2 items-center mb-2 border-2 border-purple-300 rounded-md cursor-alias hover:bg-purple-100 shadow-xl"
+        className="relative flex w-full h-16 gap-2 items-center mb-2 border-2 border-purple-300 rounded-2xl cursor-alias hover:bg-purple-100 shadow-xl"
         >
             <div className="w-16 h-full p-2">
                 <img src={imgUrl} alt={name} className="w-full h-full rounded-full object-cover"/>

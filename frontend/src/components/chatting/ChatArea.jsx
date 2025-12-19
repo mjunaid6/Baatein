@@ -1,13 +1,26 @@
 import InputArea from "./InputArea";
 import { chats } from "../../utils/arrays";
 import Chats from "./Chats";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ChatArea = ({ currFriend ,setCurrFriend}) => {
     const [messages, setMessages] = useState(chats);
 
+    useEffect(() => {
+        if(!currFriend) return;
+
+        const handleKeyDown = (e) => {
+            if(e.key === "Escape") setCurrFriend(null);
+        }
+        window.addEventListener("keydown",handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown",handleKeyDown);
+        }
+    }, [currFriend])
+
     return (
-        <div className="relative flex flex-col flex-1 h-screen bg-linear-to-br from-purple-800/40 via-indigo-900/40 to-blue-900/40">
+        <div 
+        className="relative flex flex-col flex-1 h-screen bg-linear-to-br from-purple-800/40 via-indigo-900/40 to-blue-900/40">
             <div className="absolute inset-0 bg-white/10 backdrop-blur-2xl border border-white/20"></div>
 
             <div className="absolute right-20 top-25 w-50 h-50 rounded-2xl bg-white/20 rotate-12 shadow-xl"></div>

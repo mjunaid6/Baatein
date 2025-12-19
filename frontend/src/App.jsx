@@ -3,7 +3,7 @@ import ChatPage from "./pages/ChatPage"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import FriendRequest from "./components/friends/FriendRequest"
-import AdminPanel from "./components/admin/AdminPanel"
+import AdminHomePage from "./components/admin/AdminHomePage"
 
 function App() {
 
@@ -16,7 +16,7 @@ function App() {
         <Route path="/Chat" element={<ChatPage/>}>
           <Route path="requests" element={<FriendRequest/>} />
         </Route>
-        <Route path="/admin" element={<AdminPanel/>}/>
+        <Route path="/admin" element={<AdminHomePage/>}/>
       </Routes>
     </>
   )

@@ -1,19 +1,20 @@
 import UserBox from "./UserBox";
 import "../../index.css";
 
-const AdminSideBar = ({ users, setSideBar }) => {
+const UserList = ({ users }) => {
   return (
     <div className="
-      w-[25vw] h-screen
+      w-[80vw]
       flex flex-col
       bg-white/70 backdrop-blur-2xl
       border-r border-blue-400/40
       shadow-xl
     ">
-      {/* Header */}
-      <div className="flex items-center gap-3 p-3 border-b border-blue-300/40 rounded-b-xl">
-        <button
-          onClick={() => setSideBar(true)}
+      <div className="flex justify-around items-center gap-3 p-3 border-b border-blue-300/40 rounded-b-xl">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Users
+        </h2>
+        {/* <button
           className="
             flex items-center justify-center gap-2
             px-3 py-2
@@ -29,14 +30,9 @@ const AdminSideBar = ({ users, setSideBar }) => {
         >
           <i className="ri-arrow-go-back-fill text-lg"></i>
           Back
-        </button>
-
-        <h2 className="text-lg font-semibold text-gray-800">
-          Users
-        </h2>
+        </button> */}
       </div>
 
-      {/* User List */}
       <div className="flex-1 overflow-y-scroll hide-scroll-bar p-3 space-y-2">
         {users.map((user) => (
           <UserBox key={user.id} user={user} />
@@ -46,4 +42,4 @@ const AdminSideBar = ({ users, setSideBar }) => {
   );
 };
 
-export default AdminSideBar;
+export default UserList;

@@ -17,7 +17,7 @@ const FriendRequest = ({sideBar, setSideBar}) => {
         >
             <button 
                 onClick={() => setSideBar(true)}
-                className="flex justify-center items-center text-xl font-bold border-2 border-white/50 text-white gap-2 px-2 py-1 bg-blue-400 w-full h-12 rounded-2xl hover:bg-blue-500 backdrop-blur-lg cursor-pointer"
+                className="flex justify-center items-center text-xl font-bold gap-2 px-2 py-1 w-full h-12 rounded-2xl backdrop-blur-2xl bg-purple-300/60 hover:bg-purple-300 cursor-pointer"
             >
                 <i className="ri-arrow-go-back-fill"></i>
                 Back
