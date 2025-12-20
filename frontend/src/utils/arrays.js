@@ -101,6 +101,34 @@ export const arr = [
   },
 ];
 
+export const adminsList = [
+  {
+    id: "A001",
+    name: "Aisha",
+    imageUrl: "https://randomuser.me/api/portraits/women/45.jpg"
+  },
+  {
+    id: "A002",
+    name: "Faizan",
+    imageUrl: "https://randomuser.me/api/portraits/men/52.jpg"
+  },
+  {
+    id: "A003",
+    name: "Zara",
+    imageUrl: "https://randomuser.me/api/portraits/women/68.jpg"
+  },
+  {
+    id: "A004",
+    name: "Bilal",
+    imageUrl: "https://randomuser.me/api/portraits/men/19.jpg"
+  },
+  {
+    id: "A005",
+    name: "Noor",
+    imageUrl: "https://randomuser.me/api/portraits/women/29.jpg"
+  }
+];
+
 
 export const chats = [
   { id: "m0001", from: "U016", to: "U001", message: "Hey, how are you?" },

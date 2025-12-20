@@ -1,4 +1,4 @@
-import BG from "./BG";
+import BG from "../components/styles/BG";
 
 const Register = () => {
     return (

@@ -2,7 +2,7 @@ import { useState } from "react";
 import ChatArea from "../components/chatting/ChatArea";
 import FriendList from "../components/friends/FriendList";
 import FriendRequest from "../components/friends/FriendRequest";
-import BG from "./BG";
+import BG from "../components/styles/BG";
 
 const ChatPage = () => {
     const [sideBar, setSideBar] = useState(true);

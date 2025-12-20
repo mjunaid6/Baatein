@@ -1,8 +1,11 @@
+import { useState } from "react";
 import UserBox from "./UserBox";
-import "../../index.css";
+import { adminsList } from "../../utils/arrays";
+import AdminBox from "./AdminBox";
 
-const UserList = ({ users }) => {
-  return (
+const AdminList = () => {
+    const [admins, setAdmins] = useState(adminsList);
+    return (
     <div className="
       w-[80vw] p-5 rounded-2xl
       flex flex-col
@@ -12,17 +15,17 @@ const UserList = ({ users }) => {
     ">
       <div className="flex justify-around items-center gap-3 p-3 border-b border-blue-300/40 rounded-b-xl">
         <h2 className="text-lg font-semibold text-gray-800">
-          Users({users.length})
+          Admins({admins.length})
         </h2>
       </div>
 
       <div className="flex-1 overflow-y-scroll hide-scroll-bar p-3 space-y-2 max-h-[70vh]">
-        {users.map((user) => (
-          <UserBox key={user.id} user={user} />
+        {admins.map((admin) => (
+          <AdminBox key={admin.id} admin={admin} />
         ))}
       </div>
     </div>
   );
-};
+}
 
-export default UserList;
+export default AdminList;
