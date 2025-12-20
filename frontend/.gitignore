@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 src/components/admin/Meme.jsx
-src/components/assets/meme_rajiv_talwar.mp4
+src/assets/meme_rajiv_talwar.mp4
