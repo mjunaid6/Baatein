@@ -81,7 +81,7 @@ export const arr = [
   },
   {
     id: "U017",
-    name: "Noor",
+    name: "Nahid",
     imageUrl: "https://randomuser.me/api/portraits/women/60.jpg"
   },
   {
@@ -91,7 +91,7 @@ export const arr = [
   },
   {
     id: "U019",
-    name: "Hania",
+    name: "Shamim",
     imageUrl: "https://randomuser.me/api/portraits/women/5.jpg"
   },
   {

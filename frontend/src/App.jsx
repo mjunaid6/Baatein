@@ -3,7 +3,7 @@ import ChatPage from "./pages/ChatPage"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import FriendRequest from "./components/friends/FriendRequest"
-import AdminHomePage from "./components/admin/AdminHomePage"
+import AdminHomePage from "./pages/AdminHomePage"
 
 function App() {
 

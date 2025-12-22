@@ -2,6 +2,10 @@ import { useState } from "react";
 
 const FriendListCard = ({imgUrl, name, onSelect}) => {
     const [deleteButton,setDeleteButton] = useState(true);
+    const handleDelete = (e) => {
+        e.stopPropagation();
+        setDeleteButton(!deleteButton);
+    }
     return(
         <div 
         onClick={onSelect}
@@ -12,8 +16,8 @@ const FriendListCard = ({imgUrl, name, onSelect}) => {
             </div>
             <h2 className="font-bold text-[20px] text-gray-600 w-[70%]">{name}</h2>
             
-            <i onClick={() => setDeleteButton(!deleteButton)} className="ri-arrow-drop-down-line hover:bg-purple-400 rounded-full w-4 h-4 text-center flex items-center cursor-pointer"></i>
-            <div onClick={() => setDeleteButton(true)} className={`absolute -bottom-[15%] right-[5%] w-20 h-8 bg-red-400 rounded-lg ${deleteButton ? 'hidden' : ''} flex justify-center items-center text-white cursor-pointer hover:shadow-xl/20 hover:bg-red-500`}>Remove</div>
+            <i onClick={handleDelete} className="ri-arrow-drop-down-line hover:bg-purple-400 rounded-full w-4 h-4 text-center flex items-center cursor-pointer"></i>
+            <div onClick={handleDelete} className={`absolute -bottom-[15%] right-[5%] w-20 h-8 bg-red-400 rounded-lg ${deleteButton ? 'hidden' : ''} flex justify-center items-center text-white cursor-pointer hover:shadow-xl/20 hover:bg-red-500`}>Remove</div>
         </div>
     )
 }

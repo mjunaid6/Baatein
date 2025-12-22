@@ -1,13 +1,13 @@
 import { useState } from "react";
-import AdminNavBar from "./AdminNavBar";
-import UserList from "./UserList";
-import { arr } from "../../utils/arrays";
+import AdminNavBar from "../components/admin/AdminNavBar";
+import UserList from "../components/admin/UserList";
+import { arr } from "../utils/arrays";
 import { Route, Routes } from "react-router-dom";
-import AdminDashboard from "./AdminDashboard";
-import AdminBG from "../styles/AdminBG";
-import AdminList from "./AdminsList";
-import AdminHelp from "./AdminHelp";
-import Meme from "./Meme";
+import AdminDashboard from "../components/admin/AdminDashboard";
+import AdminBG from "../components/styles/AdminBG";
+import AdminList from "../components/admin/AdminsList";
+import AdminHelp from "../components/admin/AdminHelp";
+import Meme from "../components/admin/Meme";
 
 const AdminHomePage = () => {
     const [users,setUsers] = useState(arr);

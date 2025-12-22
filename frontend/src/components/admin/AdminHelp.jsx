@@ -2,7 +2,7 @@ const AdminHelp = () => {
     return (
         <div 
         className="
-        w-[50vw] h-[80vh] p-10
+        w-[50vw] h-[80vh] p-10 rounded-3xl overflow-hidden
         flex justify-center items-center flex-wrap 
         text-3xl text-center text-gray-600
         bg-white/30 inset-shadow-sm inset-shadow-gray-500 backdrop-blur-2xl">
