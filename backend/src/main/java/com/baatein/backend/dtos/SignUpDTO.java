@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SignUpDTO {
-    private String userName;
+    private String username;
     private String email;
     private String password;
 }
