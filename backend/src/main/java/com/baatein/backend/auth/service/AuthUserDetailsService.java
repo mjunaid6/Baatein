@@ -1,0 +1,58 @@
+package com.baatein.backend.auth.service;
+
+import java.util.HashSet;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.baatein.backend.dtos.SignUpDTO;
+import com.baatein.backend.entities.RefreshToken;
+import com.baatein.backend.entities.User;
+import com.baatein.backend.repositories.UserRepository;
+import com.baatein.backend.util.ValidationUtil;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class AuthUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
+
+    public RefreshToken signup(SignUpDTO signUpDTO) {
+        if(!ValidationUtil.isUserValid(signUpDTO)) return null;
+
+        if(userRepository.existsByEmail(signUpDTO.getEmail())) return null;
+
+        User user = new User(null, 
+                            signUpDTO.getUserName(), 
+                            signUpDTO.getEmail(), 
+                            passwordEncoder.encode(signUpDTO.getPassword()),
+                            null, 
+                            new HashSet<>(), 
+                            new HashSet<>(), 
+                            new HashSet<>(), 
+                            null, 
+                            new HashSet<>());
+
+        userRepository.save(user);
+
+        RefreshToken refreshToken = refreshTokenService.creaRefreshToken(signUpDTO.getEmail());
+
+        return refreshToken;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                                  .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new AuthUserDetails(user);
+    }
+
+}

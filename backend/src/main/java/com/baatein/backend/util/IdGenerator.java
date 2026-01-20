@@ -1,4 +1,4 @@
-package com.baatein.backend.entities;
+package com.baatein.backend.util;
 
 public class IdGenerator {
     public static String generateUserId(int len) {
