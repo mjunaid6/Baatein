@@ -4,14 +4,13 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.baatein.backend.util.IdGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,7 @@ import lombok.Setter;
 @Setter
 public class Message {
     @Id
-    @Column(length = 12, unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String messageId;
 
     @ManyToOne(optional = false)
@@ -38,11 +37,4 @@ public class Message {
 
     @CreationTimestamp
     private LocalDateTime timeStamp;
-
-    @PrePersist
-    private void ensureMessageId() {
-        if(this.messageId == null) {
-            this.messageId = IdGenerator.generateUserId(12);
-        }
-    }
 }

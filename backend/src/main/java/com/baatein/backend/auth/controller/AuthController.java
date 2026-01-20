@@ -32,6 +32,10 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponseDTO> signUp(@RequestBody SignUpDTO signUpDTO) {
+        System.out.println("Username : " + signUpDTO.getUsername());
+        System.out.println("Email : " + signUpDTO.getEmail());
+        System.out.println("Password : " + signUpDTO.getPassword());
+
         String refreshToken = authUserDetailsService.signup(signUpDTO);
 
         if(refreshToken == null) {

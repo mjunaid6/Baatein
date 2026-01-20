@@ -6,16 +6,14 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.baatein.backend.util.IdGenerator;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +25,7 @@ import lombok.Setter;
 public class Conversation {
 
     @Id
-    @Column(length = 12, unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String conversationId;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -40,15 +38,5 @@ public class Conversation {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    @PrePersist
-    private void ensureConversationId() {
-        if (this.conversationId == null) {
-            this.conversationId = IdGenerator.generateUserId(12);
-        }
-        if (participants.size() < 2) {
-            throw new IllegalStateException("Conversation must have at least 2 participants");
-        }
-    }
 }
 

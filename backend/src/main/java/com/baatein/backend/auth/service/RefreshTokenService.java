@@ -12,18 +12,27 @@ import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.RefreshTokenRepository;
 import com.baatein.backend.repositories.UserRepository;
 
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
+
 
 @Service
-@AllArgsConstructor
 public class RefreshTokenService {
 
     @Value("${refresh-token.expiry}")
-    private int expiry;
+    private long expiry;
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    public RefreshTokenService(
+            UserRepository userRepository,
+            RefreshTokenRepository refreshTokenRepository
+    ) {
+        this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
+    @Transactional
     public String createRefreshToken(String email) throws UsernameNotFoundException{
         User user = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));

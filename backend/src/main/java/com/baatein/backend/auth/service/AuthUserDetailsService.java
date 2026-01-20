@@ -1,6 +1,7 @@
 package com.baatein.backend.auth.service;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,12 +25,12 @@ public class AuthUserDetailsService implements UserDetailsService {
     private final RefreshTokenService refreshTokenService;
 
     public String signup(SignUpDTO signUpDTO) {
-        if(!ValidationUtil.isUserValid(signUpDTO)) return null;
+        if(ValidationUtil.isUserValid(signUpDTO)) return null;
 
         if(userRepository.existsByEmail(signUpDTO.getEmail())) return null;
 
-        User user = new User(null, 
-                            signUpDTO.getUserName(), 
+        User user = new User(UUID.randomUUID().toString(), 
+                            signUpDTO.getUsername(), 
                             signUpDTO.getEmail(), 
                             passwordEncoder.encode(signUpDTO.getPassword()),
                             null, 
