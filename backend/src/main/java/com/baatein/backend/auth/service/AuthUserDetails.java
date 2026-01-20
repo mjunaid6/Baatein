@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.baatein.backend.entities.Role;
 import com.baatein.backend.entities.User;
 
-public class AuthUserDetails extends User implements UserDetails {
+public class AuthUserDetails implements UserDetails {
 
     private String email;
 

@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.baatein.backend.dtos.SignUpDTO;
-import com.baatein.backend.entities.RefreshToken;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.UserRepository;
 import com.baatein.backend.util.ValidationUtil;
@@ -24,7 +23,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
-    public RefreshToken signup(SignUpDTO signUpDTO) {
+    public String signup(SignUpDTO signUpDTO) {
         if(!ValidationUtil.isUserValid(signUpDTO)) return null;
 
         if(userRepository.existsByEmail(signUpDTO.getEmail())) return null;
@@ -42,9 +41,8 @@ public class AuthUserDetailsService implements UserDetailsService {
 
         userRepository.save(user);
 
-        RefreshToken refreshToken = refreshTokenService.creaRefreshToken(signUpDTO.getEmail());
+        return refreshTokenService.createRefreshToken(signUpDTO.getEmail());
 
-        return refreshToken;
     }
 
     @Override

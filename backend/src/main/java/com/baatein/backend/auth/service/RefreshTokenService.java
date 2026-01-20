@@ -24,7 +24,7 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public RefreshToken creaRefreshToken(String email) throws UsernameNotFoundException{
+    public String createRefreshToken(String email) throws UsernameNotFoundException{
         User user = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
                     
@@ -36,7 +36,9 @@ public class RefreshTokenService {
                                                 .token(UUID.randomUUID().toString())
                                                 .build();
 
-        return refreshTokenRepository.save(refreshToken);
+        refreshTokenRepository.save(refreshToken);
+
+        return refreshToken.getToken();
     }
 
     public boolean verifyExpiration(RefreshToken refreshToken) {
@@ -45,6 +47,11 @@ public class RefreshTokenService {
             return false;
         }
         return true;
+    }
+
+    public RefreshToken findRefreshToken(String token) throws RuntimeException{
+        return refreshTokenRepository.findByToken(token)
+                                        .orElseThrow(() -> new RuntimeException("Token not found"));
     }
 
 }
