@@ -10,16 +10,23 @@ api.interceptors.response.use(
   async error => {
     const original = error.config;
 
-    if (error.response?.status === 401 && !original._retry) {
+    if (
+      error.response?.status === 401 &&
+      !original._retry &&
+      !original.url.includes("/auth/refresh-token")
+    ) {
       original._retry = true;
 
-      const resp = await api.post("/refresh-token");
-      setAccessToken(resp.data.accessToken);
+      try {
+        const resp = await api.post("/auth/refresh-token");
 
-      original.headers.Authorization =
-        `Bearer ${resp.data.accessToken}`;
+        original.headers.Authorization =
+          `Bearer ${resp.data.accessToken}`;
 
-      return api(original);
+        return api(original);
+      } catch {
+        return Promise.reject(error);
+      }
     }
 
     return Promise.reject(error);

@@ -1,20 +1,40 @@
 import { createContext, useContext , useEffect, useState } from "react";
+import api from "./api";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
+        let mounted = true;
+
         const refresh = async () => {
-            try{
-                const resp = await api.post("/auth/refresh-token")
-                setAccessToken(resp.data.accesToken)
-            } catch (err) {
-                setAccessToken(null);
+            try {
+            const resp = await api.post("/auth/refresh-token");
+            if (mounted) {
+                setAccessToken(resp.data.accessToken);
+                setRole(resp.data.role ?? null);
             }
-        }
+            } catch {
+            if (mounted) {
+                setAccessToken(null);
+                setRole(null);
+            }
+            } finally {
+            if (mounted) {
+                setLoading(false); 
+            }
+            }
+        };
 
         refresh();
-    }, [])
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
 
     const [accessToken, setAccessToken] = useState(null)
     const [role, setRole] = useState(null)
@@ -22,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider
-            value={{accessToken , setAccessToken, role, setRole, isAuthenticated}}
+            value={{accessToken , setAccessToken, role, setRole, isAuthenticated, loading}}
         > 
             {children}
         </AuthContext.Provider> 
@@ -31,5 +51,3 @@ export const AuthProvider = ({ children }) => {
 
 
 export const useAuth = () => useContext(AuthContext);
-
-export default useAuth;
