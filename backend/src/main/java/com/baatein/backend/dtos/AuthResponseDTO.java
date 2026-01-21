@@ -13,5 +13,5 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuthResponseDTO {
     private String accessToken;
-    private String refreshToken;
+    private String role;
 }

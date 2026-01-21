@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baatein.backend.auth.config.CookieUtil;
 import com.baatein.backend.auth.service.AuthUserDetailsService;
 import com.baatein.backend.auth.service.JWTService;
 import com.baatein.backend.auth.service.RefreshTokenService;
@@ -18,6 +19,7 @@ import com.baatein.backend.dtos.SignUpDTO;
 import com.baatein.backend.dtos.UserLoginDto;
 import com.baatein.backend.entities.RefreshToken;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -31,11 +33,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponseDTO> signUp(@RequestBody SignUpDTO signUpDTO) {
-        System.out.println("Username : " + signUpDTO.getUsername());
-        System.out.println("Email : " + signUpDTO.getEmail());
-        System.out.println("Password : " + signUpDTO.getPassword());
-
+    public ResponseEntity<AuthResponseDTO> signUp(@RequestBody SignUpDTO signUpDTO, HttpServletResponse response) {
         String refreshToken = authUserDetailsService.signup(signUpDTO);
 
         if(refreshToken == null) {
@@ -44,16 +42,18 @@ public class AuthController {
                                 .build();
         }
 
+        CookieUtil.addRefreshCookie(response, refreshToken);
+
         return ResponseEntity
                             .status(HttpStatus.CREATED)
                             .body(new AuthResponseDTO(
                                 jwtService.createToken(signUpDTO.getEmail()),
-                                refreshToken
+                                ""
                             ));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginDto userLoginDto) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginDto userLoginDto, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                                             userLoginDto.getEmail(), 
@@ -61,29 +61,39 @@ public class AuthController {
                 )
         );
 
+        CookieUtil.addRefreshCookie(response, refreshTokenService.createRefreshToken(userLoginDto.getEmail()));
+
         return ResponseEntity
                             .status(HttpStatus.OK)
                             .body(new AuthResponseDTO(
                                 jwtService.createToken(userLoginDto.getEmail()),
-                                refreshTokenService.createRefreshToken(userLoginDto.getEmail())
+                                ""
                             ));
     }
 
-    @PostMapping("/refreshToken")
-    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO) {
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletResponse response) {
         RefreshToken refreshToken = refreshTokenService.findRefreshToken(refreshTokenDTO.getRefreshToken());
         
         if(!refreshTokenService.verifyExpiration(refreshToken)) return ResponseEntity
                                                                                     .status(HttpStatus.BAD_REQUEST)
                                                                                     .build();
         
+        CookieUtil.addRefreshCookie(response, refreshToken.getToken());
+                                                                                    
         return ResponseEntity
                             .status(HttpStatus.OK)
                             .body(new AuthResponseDTO(
                                                     jwtService.createToken(refreshToken.getUser().getEmail()),
-                                                    refreshToken.getToken() 
+                                                    ""
                                                     )
                 );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        CookieUtil.deleteRefreshToken(response);
+        return ResponseEntity.ok().build();
     }
 
 }
