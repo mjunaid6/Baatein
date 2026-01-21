@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,6 @@ import com.baatein.backend.auth.service.AuthUserDetailsService;
 import com.baatein.backend.auth.service.JWTService;
 import com.baatein.backend.auth.service.RefreshTokenService;
 import com.baatein.backend.dtos.AuthResponseDTO;
-import com.baatein.backend.dtos.RefreshTokenDTO;
 import com.baatein.backend.dtos.SignUpDTO;
 import com.baatein.backend.dtos.UserLoginDto;
 import com.baatein.backend.entities.RefreshToken;
@@ -72,23 +72,30 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenDTO refreshTokenDTO, HttpServletResponse response) {
-        RefreshToken refreshToken = refreshTokenService.findRefreshToken(refreshTokenDTO.getRefreshToken());
-        
-        if(!refreshTokenService.verifyExpiration(refreshToken)) return ResponseEntity
-                                                                                    .status(HttpStatus.BAD_REQUEST)
-                                                                                    .build();
-        
-        CookieUtil.addRefreshCookie(response, refreshToken.getToken());
-                                                                                    
-        return ResponseEntity
-                            .status(HttpStatus.OK)
-                            .body(new AuthResponseDTO(
-                                                    jwtService.createToken(refreshToken.getUser().getEmail()),
-                                                    ""
-                                                    )
-                );
+    public ResponseEntity<AuthResponseDTO> refreshToken(
+            @CookieValue(name = "refresh_token", required = false) String refreshToken,
+            HttpServletResponse response
+    ) {
+        if (refreshToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        RefreshToken token = refreshTokenService.findRefreshToken(refreshToken);
+
+        if (!refreshTokenService.verifyExpiration(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        CookieUtil.addRefreshCookie(response, token.getToken());
+
+        return ResponseEntity.ok(
+                new AuthResponseDTO(
+                        jwtService.createToken(token.getUser().getEmail()),
+                        ""
+                )
+        );
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {

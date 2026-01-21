@@ -7,21 +7,21 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
 
-    @Value("${refresh-token}")
+    @Value("${refresh-token.expiry}")
     private static long expiry;
 
     public static void addRefreshCookie(
-                                    HttpServletResponse response,
-                                    String refreshToken
-    )   {
-        Cookie cookie = new Cookie("refresh_token", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge((int)(expiry/1000));
+            HttpServletResponse response,
+            String refreshToken
+    ) {
+        response.addHeader("Set-Cookie",
+            "refresh_token=" + refreshToken +
+            "; Path=/" +
+            "; HttpOnly" +
+            "; SameSite=Lax"
+        );
+    }
 
-        response.addCookie(cookie);
-    }   
 
     public static void deleteRefreshToken(HttpServletResponse response) {
         Cookie cookie = new Cookie("refresh_token", null);
