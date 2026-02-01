@@ -8,4 +8,5 @@ import com.baatein.backend.entities.Message;
 
 public interface MessageRepository extends JpaRepository<Message,String> {
     List<Message> findByConversationConversationId(String conversationId);
+    boolean existsByMessageIdAndSenderId(String messageId, String senderId);
 }

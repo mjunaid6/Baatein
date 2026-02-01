@@ -18,4 +18,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
                 """
     )
     Optional<Conversation> findConversationBetweenUsers(User user1, User user2);
+
+    boolean existsByConversationIdAndParticipantsUserId(String conversationId, String userId);
+
 }
