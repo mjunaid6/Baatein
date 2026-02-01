@@ -35,8 +35,6 @@ public class AuthUserDetailsService implements UserDetailsService {
                             passwordEncoder.encode(signUpDTO.getPassword()),
                             null, 
                             new HashSet<>(), 
-                            new HashSet<>(), 
-                            new HashSet<>(), 
                             null, 
                             new HashSet<>());
 

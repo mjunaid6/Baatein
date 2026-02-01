@@ -2,8 +2,7 @@ package com.baatein.backend.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,20 +41,8 @@ public class User {
 
     private String imgUrl;
 
-    @ManyToMany
-    @JoinTable(
-        name = "user_friends",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "friend_id")
-    )
-    @JsonIgnore
-    private Set<User> friends = new HashSet<>();
-
-    @OneToMany(mappedBy = "receiver")
-    private Set<FriendRequest> receivedRequests = new HashSet<>();
-
-    @OneToMany(mappedBy = "sender")
-    private Set<FriendRequest> sentRequests = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friendship> friends = new HashSet<>();
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private RefreshToken refreshToken;
