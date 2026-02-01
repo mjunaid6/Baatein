@@ -21,4 +21,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
     boolean existsByConversationIdAndParticipantsUserId(String conversationId, String userId);
 
+    boolean existsByConversationIdAndParticipantsEmail(String conversationId, String email);
+
 }

@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baatein.backend.dtos.ChatRequestDTO;
 import com.baatein.backend.dtos.ChatResponeDTO;
 import com.baatein.backend.dtos.MessageDTO;
 import com.baatein.backend.services.ChatService;
@@ -29,14 +30,19 @@ public class ChatController {
 
     private final ChatService chatService;
     
-    @GetMapping("/getMessages")
-    public ResponseEntity<ChatResponeDTO> getChats(@RequestBody ChatRequestDTO chatRequestDTO) {
-        List<MessageDTO> messages = chatService.getMessagesFromConversation(chatRequestDTO.getConversationId());
+    @GetMapping("/conversations/{conversationId}/messages")
+    public ResponseEntity<ChatResponeDTO> getChats(
+            @PathVariable String conversationId
+    ) {
+        String email = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
+        List<MessageDTO> messages =
+                chatService.getMessagesFromConversation(conversationId,email);
 
-        return ResponseEntity.
-                              status(HttpStatus.OK)
-                              .body(new ChatResponeDTO(messages));
+        return ResponseEntity.ok(new ChatResponeDTO(messages));
     }
+
 
     @PutMapping("/putMessage") 
     public ResponseEntity<String> putMessage(@RequestBody MessageDTO messageDTO) {

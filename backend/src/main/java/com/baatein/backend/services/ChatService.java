@@ -21,8 +21,8 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
 
-    public List<MessageDTO> getMessagesFromConversation(String conversationId) {
-        if(!conversationRepository.existsById(conversationId)) throw new ResourceAccessException("Conversation Not found  with conversation Id: " + conversationId);
+    public List<MessageDTO> getMessagesFromConversation(String conversationId, String email) {
+        if(!conversationRepository.existsByConversationIdAndParticipantsEmail(conversationId, email)) throw new ResourceAccessException("Conversation Not found  with conversation Id: " + conversationId);
 
         List<Message> messages = messageRepository.findByConversationConversationId(conversationId);
         return messageMapper.toDTO(messages);
@@ -75,19 +75,29 @@ public class ChatService {
             !conversationRepository.existsByConversationIdAndParticipantsUserId(
                 first.getConversationId(),
                 first.getSenderId()
-            ) ||
-            !messageRepository.existsByMessageIdAndSenderId(first.getMessageId(), first.getSenderId())
+            )
         ) return false;
 
         boolean sameConversationAndSender = messageDTOs.stream()
-                .allMatch(m -> first.getConversationId().equals(m.getConversationId()) && first.getSenderId().equals(m.getSenderId()));
+                .allMatch(m ->
+                    first.getConversationId().equals(m.getConversationId()) &&
+                    first.getSenderId().equals(m.getSenderId())
+                );
 
         if (!sameConversationAndSender) return false;
 
-        messageRepository.deleteAllById(
-                messageDTOs.stream()
-                        .map(MessageDTO::getMessageId)
-                        .toList()
+        List<String> messageIds = messageDTOs.stream()
+                .map(MessageDTO::getMessageId)
+                .toList();
+
+        long count = messageRepository
+                .countByIdInAndSenderId(messageIds, first.getSenderId());
+
+        if (count != messageIds.size()) return false;
+
+        messageRepository.deleteByIdInAndSenderId(
+                messageIds,
+                first.getSenderId()
         );
 
         return true;
