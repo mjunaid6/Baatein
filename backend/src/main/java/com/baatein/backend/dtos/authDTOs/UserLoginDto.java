@@ -1,4 +1,4 @@
-package com.baatein.backend.dtos;
+package com.baatein.backend.dtos.authDTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

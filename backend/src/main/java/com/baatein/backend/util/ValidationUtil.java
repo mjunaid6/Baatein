@@ -1,7 +1,7 @@
 package com.baatein.backend.util;
 
-import com.baatein.backend.dtos.SignUpDTO;
-import com.baatein.backend.dtos.UserLoginDto;
+import com.baatein.backend.dtos.authDTOs.SignUpDTO;
+import com.baatein.backend.dtos.authDTOs.UserLoginDto;
 
 public class ValidationUtil {
     public static boolean isUserValid(UserLoginDto userDto) {

@@ -9,9 +9,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.baatein.backend.dtos.SignUpDTO;
+import com.baatein.backend.dtos.authDTOs.SignUpDTO;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.UserRepository;
+import com.baatein.backend.util.CodeGeneration;
 import com.baatein.backend.util.ValidationUtil;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class AuthUserDetailsService implements UserDetailsService {
                             signUpDTO.getUsername(), 
                             signUpDTO.getEmail(), 
                             passwordEncoder.encode(signUpDTO.getPassword()),
+                            CodeGeneration.generateUniqueFriendCode(),
                             null, 
                             new HashSet<>(), 
                             null, 

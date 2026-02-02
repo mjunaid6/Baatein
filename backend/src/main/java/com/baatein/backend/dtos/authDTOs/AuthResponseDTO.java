@@ -1,20 +1,17 @@
-package com.baatein.backend.dtos;
+package com.baatein.backend.dtos.authDTOs;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SignUpDTO {
-    private String username;
-    private String email;
-    private String password;
+public class AuthResponseDTO {
+    private String accessToken;
+    private String role;
 }

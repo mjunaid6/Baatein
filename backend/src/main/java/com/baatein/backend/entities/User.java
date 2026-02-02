@@ -27,7 +27,7 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @Column(updatable = false, name = "user_id")
+    @Column(updatable = false, name = "user_id", length = 6)
     private String userId;
 
     @Column(name = "username", nullable = false)
@@ -40,6 +40,9 @@ public class User {
     private String password;
 
     private String imgUrl;
+
+    @Column(name = "friend_code", length = 6, unique = true, nullable = false)
+    private String friendCode;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Friendship> friends = new HashSet<>();

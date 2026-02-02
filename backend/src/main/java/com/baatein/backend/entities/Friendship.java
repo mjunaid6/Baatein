@@ -2,6 +2,7 @@ package com.baatein.backend.entities;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,9 +33,16 @@ public class Friendship {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_id", nullable = false)
     private User friend;
+
+    @Column(name = "friendship_code", unique = true, nullable = false, length = 7)
+    private String friendshipCode;
     
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blocked_by")
+    private User blockedBy;
 
     private LocalDateTime createdAt;
 

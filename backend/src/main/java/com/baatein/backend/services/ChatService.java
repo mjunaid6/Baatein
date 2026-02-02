@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
-import com.baatein.backend.dtos.MessageDTO;
+import com.baatein.backend.dtos.chatDTOs.MessageDTO;
 import com.baatein.backend.entities.Message;
 import com.baatein.backend.mappers.MessageMapper;
 import com.baatein.backend.repositories.ConversationRepository;

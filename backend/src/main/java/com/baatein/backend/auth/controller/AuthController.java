@@ -14,9 +14,9 @@ import com.baatein.backend.auth.config.CookieUtil;
 import com.baatein.backend.auth.service.AuthUserDetailsService;
 import com.baatein.backend.auth.service.JWTService;
 import com.baatein.backend.auth.service.RefreshTokenService;
-import com.baatein.backend.dtos.AuthResponseDTO;
-import com.baatein.backend.dtos.SignUpDTO;
-import com.baatein.backend.dtos.UserLoginDto;
+import com.baatein.backend.dtos.authDTOs.AuthResponseDTO;
+import com.baatein.backend.dtos.authDTOs.SignUpDTO;
+import com.baatein.backend.dtos.authDTOs.UserLoginDto;
 import com.baatein.backend.entities.RefreshToken;
 
 import jakarta.servlet.http.HttpServletResponse;

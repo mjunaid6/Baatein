@@ -1,19 +1,16 @@
-package com.baatein.backend.dtos;
-
-import java.util.List;
+package com.baatein.backend.dtos.friendDTOs;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ChatResponeDTO {
-    private List<MessageDTO> messages;
+public class FriendDTO {
+    private String friendName;
+    private String imgUrl;
 }

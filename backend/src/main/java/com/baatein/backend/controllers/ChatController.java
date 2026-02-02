@@ -13,18 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baatein.backend.dtos.ChatResponeDTO;
-import com.baatein.backend.dtos.MessageDTO;
+import com.baatein.backend.dtos.chatDTOs.ChatResponeDTO;
+import com.baatein.backend.dtos.chatDTOs.MessageDTO;
 import com.baatein.backend.services.ChatService;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 @RestController
 @RequestMapping("chat")
-@Getter
-@Setter
 @AllArgsConstructor
 public class ChatController {
 
@@ -35,8 +31,8 @@ public class ChatController {
             @PathVariable String conversationId
     ) {
         String email = SecurityContextHolder.getContext()
-            .getAuthentication()
-            .getName();
+                                            .getAuthentication()
+                                            .getName();
         List<MessageDTO> messages =
                 chatService.getMessagesFromConversation(conversationId,email);
 

@@ -1,4 +1,4 @@
-package com.baatein.backend.dtos;
+package com.baatein.backend.dtos.chatDTOs;
 
 import java.time.LocalDateTime;
 

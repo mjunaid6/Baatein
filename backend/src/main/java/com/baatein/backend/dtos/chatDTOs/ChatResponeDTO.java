@@ -1,4 +1,6 @@
-package com.baatein.backend.dtos;
+package com.baatein.backend.dtos.chatDTOs;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,6 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ChatRequestDTO {
-    private String conversationId;
+public class ChatResponeDTO {
+    private List<MessageDTO> messages;
 }
