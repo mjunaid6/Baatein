@@ -11,10 +11,10 @@ import com.baatein.backend.entities.Friendship;
 public interface FriendshipRepository extends JpaRepository<Friendship,String> {
     
     @Query("""
-            SELECT * 
-            FROM Friendship f
-            WHERE f.status = 'FRIENDS'
-                AND (f.user.email =: email || f.friend.email =: email)
+        SELECT f
+        FROM Friendship f
+        WHERE f.status = com.baatein.backend.entities.Friendship.Status.FRIENDS
+        AND (f.user.email = :email OR f.friend.email = :email)
     """)
     List<Friendship> getFriendshipsFromEmail(String email);
 
