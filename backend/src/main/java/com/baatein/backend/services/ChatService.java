@@ -20,6 +20,7 @@ public class ChatService {
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
+    private final MessageService messageService;
 
     public List<MessageDTO> getMessagesFromConversation(String conversationId, String email) {
         if(!conversationRepository.existsByConversationIdAndParticipantsEmail(conversationId, email)) throw new ResourceAccessException("Conversation Not found  with conversation Id: " + conversationId);
@@ -38,7 +39,7 @@ public class ChatService {
             )
         )  return false;
 
-        Message message = messageMapper.toEntity(messageDTO);
+        Message message = messageService.toEntity(messageDTO);
         message.setMessageId(UUID.randomUUID().toString());
 
         messageRepository.save(message);
@@ -55,7 +56,7 @@ public class ChatService {
                 messageDTO.getConversationId(),
                 messageDTO.getSenderId()
             ) ||
-            !messageRepository.existsByMessageIdAndSenderId(messageDTO.getMessageId(), messageDTO.getSenderId())
+            !messageRepository.existsByMessageIdAndSenderUserId(messageDTO.getMessageId(), messageDTO.getSenderId())
         ) return false;
 
         messageRepository.deleteById(messageDTO.getMessageId());
@@ -91,11 +92,11 @@ public class ChatService {
                 .toList();
 
         long count = messageRepository
-                .countByIdInAndSenderId(messageIds, first.getSenderId());
+                .countByMessageIdInAndSenderUserId(messageIds, first.getSenderId());
 
         if (count != messageIds.size()) return false;
 
-        messageRepository.deleteByIdInAndSenderId(
+        messageRepository.deleteByMessageIdInAndSenderUserId(
                 messageIds,
                 first.getSenderId()
         );

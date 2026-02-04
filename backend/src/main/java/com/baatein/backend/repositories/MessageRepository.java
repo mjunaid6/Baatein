@@ -8,9 +8,10 @@ import com.baatein.backend.entities.Message;
 
 public interface MessageRepository extends JpaRepository<Message,String> {
     List<Message> findByConversationConversationId(String conversationId);
-    boolean existsByMessageIdAndSenderId(String messageId, String senderId);
 
-    Long countByIdInAndSenderId(List<String> messageId, String senderId);
+    boolean existsByMessageIdAndSenderUserId(String messageId, String senderId);
 
-    void deleteByIdInAndSenderId(List<String> messageId, String senderId);
+    long countByMessageIdInAndSenderUserId(List<String> messageIds, String senderId);
+
+    void deleteByMessageIdInAndSenderUserId(List<String> messageIds, String senderId);
 }

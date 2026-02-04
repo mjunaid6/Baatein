@@ -21,5 +21,5 @@ public class MessageDTO {
     private String conversationId; 
     private String senderId;
     private String content;
-    private LocalDateTime timestamp;
+    private LocalDateTime timeStamp;
 }

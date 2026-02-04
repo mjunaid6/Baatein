@@ -15,7 +15,4 @@ public interface MessageMapper {
     
     MessageDTO toDTO(Message message);
     List<MessageDTO> toDTO(List<Message> message);
-
-    Message toEntity(MessageDTO messageDTO);
-    List<Message> toEntity(List<MessageDTO> messageDTO);
 }
