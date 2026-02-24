@@ -14,7 +14,7 @@ import com.baatein.backend.entities.Friendship;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.FriendshipRepository;
 import com.baatein.backend.repositories.UserRepository;
-import com.baatein.backend.util.CodeGeneration;
+import com.baatein.backend.util.CodeGenerationService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -22,8 +22,9 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class FriendService {
-    private FriendshipRepository friendshipRepository;
-    private UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
+    private final UserRepository userRepository;
+    private final CodeGenerationService codeGenerationService;
 
     public List<FriendDTO> getFriendsUsingEmail(String email) {
         if(email == null) return null;
@@ -54,7 +55,7 @@ public class FriendService {
                                                 UUID.randomUUID().toString(),
                                                 user, 
                                                 friend, 
-                                                CodeGeneration.generateUniqueFriendshipCode(),
+                                                codeGenerationService.generateUniqueFriendshipCode(),
                                                 Friendship.Status.PENDING, 
                                                 null,
                                                 LocalDateTime.now());

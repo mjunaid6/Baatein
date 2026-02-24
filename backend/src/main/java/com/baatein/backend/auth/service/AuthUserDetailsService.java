@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.baatein.backend.dtos.authDTOs.SignUpDTO;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.UserRepository;
-import com.baatein.backend.util.CodeGeneration;
+import com.baatein.backend.util.CodeGenerationService;
 import com.baatein.backend.util.ValidationUtil;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +24,7 @@ public class AuthUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final CodeGenerationService codeGenerationService;
 
     public String signup(SignUpDTO signUpDTO) {
         if(ValidationUtil.isUserValid(signUpDTO)) return null;
@@ -34,7 +35,7 @@ public class AuthUserDetailsService implements UserDetailsService {
                             signUpDTO.getUsername(), 
                             signUpDTO.getEmail(), 
                             passwordEncoder.encode(signUpDTO.getPassword()),
-                            CodeGeneration.generateUniqueFriendCode(),
+                            codeGenerationService.generateUniqueFriendCode(),
                             null, 
                             new HashSet<>(), 
                             null, 
