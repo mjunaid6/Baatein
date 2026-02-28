@@ -27,7 +27,7 @@ public class FriendService {
     private final CodeGenerationService codeGenerationService;
 
     public List<FriendDTO> getFriendsUsingEmail(String email) {
-        if(email == null) return null;
+        if(email == null) return new ArrayList<>();
 
         List<Friendship> friendships = friendshipRepository.getFriendshipsFromEmail(email);
 

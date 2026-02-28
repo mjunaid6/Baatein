@@ -67,7 +67,7 @@ public class AuthController {
                             .status(HttpStatus.OK)
                             .body(new AuthResponseDTO(
                                 jwtService.createToken(userLoginDto.getEmail()),
-                                ""
+                                "USER"
                             ));
     }
 

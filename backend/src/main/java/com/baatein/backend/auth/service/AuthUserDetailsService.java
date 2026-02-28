@@ -35,8 +35,8 @@ public class AuthUserDetailsService implements UserDetailsService {
                             signUpDTO.getUsername(), 
                             signUpDTO.getEmail(), 
                             passwordEncoder.encode(signUpDTO.getPassword()),
-                            codeGenerationService.generateUniqueFriendCode(),
-                            null, 
+                            null,
+                            codeGenerationService.generateUniqueFriendCode(), 
                             new HashSet<>(), 
                             null, 
                             new HashSet<>());

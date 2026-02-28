@@ -35,10 +35,6 @@ public class FriendController {
                                             .getName();
 
         List<FriendDTO> friends = friendService.getFriendsUsingEmail(email);
-
-        if(friends == null) return ResponseEntity
-                                                .status(HttpStatus.NOT_FOUND)
-                                                .body(null);
         
         return ResponseEntity
                             .status(HttpStatus.OK)
