@@ -1,5 +1,6 @@
 import { createContext, useContext , useEffect, useState } from "react";
 import api from "./api";
+import { setToken } from "./authToken";
 
 const AuthContext = createContext();
 
@@ -14,11 +15,13 @@ export const AuthProvider = ({ children }) => {
             const resp = await api.post("/auth/refresh-token");
             if (mounted) {
                 setAccessToken(resp.data.accessToken);
+                setToken(resp.data.accessToken);
                 setRole(resp.data.role ?? null);
             }
             } catch {
             if (mounted) {
                 setAccessToken(null);
+                setToken(resp.data.accessToken);
                 setRole(null);
             }
             } finally {

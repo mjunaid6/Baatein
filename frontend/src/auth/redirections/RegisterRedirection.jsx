@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import LoadingPage from "../../pages/LoadingPage";
+import Register from "../../pages/Register";
 
 const RegisterRedirection = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -9,7 +10,7 @@ const RegisterRedirection = () => {
 
   return isAuthenticated
     ? <Navigate to="/chat" replace />
-    : <Navigate to="/register" replace />;
+    : <Register/>;
 };
 
 export default RegisterRedirection;

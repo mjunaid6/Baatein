@@ -2,6 +2,7 @@ import { useState } from "react";
 import {useAuth} from "../auth/AuthContext";
 import api from "../auth/api";
 import { Link, useNavigate } from "react-router-dom";
+import { setToken } from "../auth/authToken";
 
 const Register = () => {
     const { setAccessToken, setRole } = useAuth();
@@ -31,6 +32,7 @@ const Register = () => {
             })
 
             setAccessToken(resp.data.accessToken);
+            setToken(resp.data.accessToken);
             setRole(resp.data.role);
 
             navigate("/chat");

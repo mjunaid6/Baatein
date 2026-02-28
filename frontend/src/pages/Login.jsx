@@ -3,6 +3,7 @@ import api from "../auth/api";
 import {useAuth} from "../auth/AuthContext";
 import BG from "../components/styles/BG";
 import { useState } from "react";
+import { setToken } from "../auth/authToken";
 
 const Login = () => {
 
@@ -29,6 +30,7 @@ const Login = () => {
             })
 
             setAccessToken(resp.data.accessToken);
+            setToken(resp.data.accessToken);
             setRole(resp.data.role);
             
             navigate("/chat")

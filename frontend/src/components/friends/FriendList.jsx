@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import '../../index.css';
 import FriendListCard from './FriendListCard'
-import { arr } from "../../utils/arrays";
+import { getFriends } from "../../utils/data/friendData";
 import SearchBar from "./SearchBar";
 import EndBar from "./EndBar";
 
-const FriendList = ({sideBar, setSideBar, setCurrFriend}) => {
-    const [friends, setFriends] = useState(arr);
-    return(
+const FriendList = ({ sideBar, setSideBar, setCurrFriend }) => {
+
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        const fetchFriends = async () => {
+            const data = await getFriends();
+            setFriends(data);
+        };
+
+        fetchFriends();
+    }, []);
+
+    return (
         <div 
             className={`
                 absolute top-0 left-0
@@ -20,20 +31,19 @@ const FriendList = ({sideBar, setSideBar, setCurrFriend}) => {
             <SearchBar setSideBar={setSideBar} />
             
             <div className="overflow-y-scroll hide-scroll-bar p-1 flex-1">
-                {friends.map(friend => (
+                {friends.map((friend, index) => (
                     <FriendListCard 
-                        key={friend.id} 
+                        key={index}
                         onSelect={() => setCurrFriend(friend)}
-                        imgUrl={friend.imageUrl} 
-                        name={friend.name}
+                        imgUrl={friend.imgUrl} 
+                        name={friend.friendName} 
                     />
                 ))}
             </div>
 
             <EndBar/>
         </div>
-    )
+    );
 }
-
 
 export default FriendList;

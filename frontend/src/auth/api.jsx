@@ -1,9 +1,18 @@
 import axios from "axios";
+import { getAccessToken } from "./authToken";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
-    withCredentials: true,
-})
+  baseURL: "http://localhost:8080",
+  withCredentials: true,
+});
+
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 api.interceptors.response.use(
   res => res,
@@ -19,6 +28,7 @@ api.interceptors.response.use(
 
       try {
         const resp = await api.post("/auth/refresh-token");
+        localStorage.setItem("accessToken", resp.data.accessToken);
 
         original.headers.Authorization =
           `Bearer ${resp.data.accessToken}`;
@@ -32,6 +42,5 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export default api;
