@@ -33,7 +33,7 @@ const FriendList = ({ sideBar, setSideBar, setCurrFriend }) => {
             <div className="overflow-y-scroll hide-scroll-bar p-1 flex-1">
                 {friends.map((friend, index) => (
                     <FriendListCard 
-                        key={index}
+                        key={friend.friendshipCode}
                         onSelect={() => setCurrFriend(friend)}
                         imgUrl={friend.imgUrl} 
                         name={friend.friendName} 

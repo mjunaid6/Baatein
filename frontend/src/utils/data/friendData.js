@@ -9,3 +9,14 @@ export const getFriends = async () => {
         return [];
     }
 };
+
+export const getFriendRequests = async () => {
+    try {
+        const resp = await api.get("/friend/getFriendRequests");
+        return resp.data.requests || [];
+    } catch (error) {
+        console.error("Error fetching friend requests:", error);
+        return [];
+    }
+};
+
