@@ -17,6 +17,10 @@ const FriendRequest = ({sideBar, setSideBar}) => {
         fetchFriendRequests();
     }, []);
 
+    const handleAccepted = (id) => {
+        setRqsts(prev => prev.filter(req => req.friendshipCode !== id));
+    };
+
     return(
         <div 
             className={`
@@ -45,10 +49,11 @@ const FriendRequest = ({sideBar, setSideBar}) => {
 
             {reqsts.map(rqst => (
                 <FriendRequestCard 
-                    key={rqst.id} 
-                    id={rqst.id} 
-                    name={rqst.name} 
-                    imageUrl={rqst.imageUrl}
+                    key={rqst.friendshipCode} 
+                    id={rqst.friendshipCode} 
+                    name={rqst.friendName} 
+                    imageUrl={rqst.imgUrl}
+                    handleAccepted={handleAccepted}
                 />
             ))}
         </div>

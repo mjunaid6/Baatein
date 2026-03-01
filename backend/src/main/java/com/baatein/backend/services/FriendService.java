@@ -36,8 +36,8 @@ public class FriendService {
         for(Friendship friendship : friendships) {
             User user = friendship.getUser();
             User friend = friendship.getFriend();
-            if(user.getEmail() == email) friends.add(new FriendDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
-            else friends.add(new FriendDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
+            if(user.getEmail().equals(email)) friends.add(new FriendDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
+            else friends.add(new FriendDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
         }
 
         return friends;
@@ -46,20 +46,18 @@ public class FriendService {
     public List<FriendRequestDTO> getFriendRequestsUsingEmail(String email) {
         if(email == null) return new ArrayList<>();
 
-        List<Friendship> friendships = friendshipRepository.getFriendshipsFromEmail(email);
+        List<Friendship> friendships = friendshipRepository.getFriendRequetsFromEmail(email);
 
         List<FriendRequestDTO> friendRequests = new ArrayList<>();
         for(Friendship friendship : friendships) {
             User user = friendship.getUser();
-            User friend = friendship.getFriend();
-            if(user.getEmail() == email) friendRequests.add(new FriendRequestDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
-            else friendRequests.add(new FriendRequestDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
+            friendRequests.add(new FriendRequestDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
         }
 
         return friendRequests;
     }
 
-    public void addFriend(String userEmail, String friendCode) {
+    public void addFriend(String friendCode, String userEmail) {
         User user = userRepository
                                 .findByEmail(userEmail)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -80,10 +78,6 @@ public class FriendService {
                                                 LocalDateTime.now());
 
         friendshipRepository.save(friendship);
-
-        user.getFriends().add(friendship);
-
-        userRepository.save(user);
     }
 
     public void deleteFriend(String userEmail, String friendshipCode) {
@@ -101,17 +95,21 @@ public class FriendService {
         Friendship friendship = friendshipRepository
                                                     .findByFriendshipCode(friendshipCode)
                                                     .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
-                                        
+                                   
+        if (!friendship.getFriend().getEmail().equals(email)) throw new AccessDeniedException("You cannot accept this request");
+
+        if (friendship.getStatus() != Friendship.Status.PENDING) throw new IllegalStateException("Request is not pending");
+
+        User user = friendship.getUser();
+        User friend = friendship.getFriend();
+        
+        if(friendshipRepository.existsByUserAndFriend(user, friend)) {
+            friendshipRepository.delete(friendship);
+            return;
+        }
+        
         friendship.setStatus(Friendship.Status.FRIENDS);
         friendshipRepository.save(friendship);
-
-        User user = userRepository
-                                .findByEmail(email)
-                                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + email));
-
-        user.getFriends().remove(friendship);
-
-        userRepository.save(user);
     }
 
     public void rejectRequest(String friendshipCode) {

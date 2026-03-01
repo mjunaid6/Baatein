@@ -19,12 +19,11 @@ public interface FriendshipRepository extends JpaRepository<Friendship,String> {
     """)
     List<Friendship> getFriendshipsFromEmail(String email);
 
-
     @Query("""
         SELECT f
         FROM Friendship f
         WHERE f.status = com.baatein.backend.entities.Friendship.Status.PENDING
-        AND (f.user.email = :email OR f.friend.email = :email)
+        AND f.friend.email = :email
     """)
     List<Friendship> getFriendRequetsFromEmail(String email);
 

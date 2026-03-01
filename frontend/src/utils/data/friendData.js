@@ -13,7 +13,7 @@ export const getFriends = async () => {
 export const getFriendRequests = async () => {
     try {
         const resp = await api.get("/friend/getFriendRequests");
-        return resp.data.requests || [];
+        return resp.data.friendRequests || [];
     } catch (error) {
         console.error("Error fetching friend requests:", error);
         return [];

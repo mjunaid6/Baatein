@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../../auth/api";
 
 const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
@@ -44,7 +44,23 @@ const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
     setFriendRequestForm(false);
     setMessage("");
     setError("");
-  }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    if (friendRequestForm) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [friendRequestForm]);
 
   if (!friendRequestForm) return null;
 
@@ -95,7 +111,7 @@ const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
 
             <button
               type="button"
-              onClick={() => handleClose()}
+              onClick={handleClose}
               className="flex-1 bg-gray-300 text-gray-800 
                          py-2 rounded-lg 
                          hover:bg-gray-400 transition"
