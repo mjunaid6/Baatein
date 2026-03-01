@@ -26,6 +26,7 @@ public class FriendService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
+    private final ConversationService conversationService;
 
     public List<FriendDTO> getFriendsUsingEmail(String email) {
         if(email == null) return new ArrayList<>();
@@ -36,8 +37,8 @@ public class FriendService {
         for(Friendship friendship : friendships) {
             User user = friendship.getUser();
             User friend = friendship.getFriend();
-            if(user.getEmail().equals(email)) friends.add(new FriendDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
-            else friends.add(new FriendDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
+            if(user.getEmail().equals(email)) friends.add(new FriendDTO(friend.getFriendCode(), friend.getUserName(), friend.getImgUrl()));
+            else friends.add(new FriendDTO(user.getFriendCode(), user.getUserName(), user.getImgUrl()));
         }
 
         return friends;
@@ -103,13 +104,10 @@ public class FriendService {
         User user = friendship.getUser();
         User friend = friendship.getFriend();
         
-        if(friendshipRepository.existsByUserAndFriend(user, friend)) {
-            friendshipRepository.delete(friendship);
-            return;
-        }
-        
         friendship.setStatus(Friendship.Status.FRIENDS);
         friendshipRepository.save(friendship);
+
+        conversationService.createPrivateConversation(user, friend);
     }
 
     public void rejectRequest(String friendshipCode) {

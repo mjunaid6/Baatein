@@ -1,107 +1,69 @@
 package com.baatein.backend.services;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 
-import com.baatein.backend.dtos.chatDTOs.MessageDTO;
+import com.baatein.backend.dtos.chatDTOs.MessageListDTO;
+import com.baatein.backend.dtos.chatDTOs.MessageRequestDTO;
+import com.baatein.backend.entities.Conversation;
 import com.baatein.backend.entities.Message;
+import com.baatein.backend.entities.User;
 import com.baatein.backend.mappers.MessageMapper;
 import com.baatein.backend.repositories.ConversationRepository;
 import com.baatein.backend.repositories.MessageRepository;
+import com.baatein.backend.repositories.UserRepository;
+import com.baatein.backend.util.CodeGenerationService;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class ChatService {
+
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
     private final MessageMapper messageMapper;
-    private final MessageService messageService;
+    private final ConversationService conversationService;
+    private final CodeGenerationService codeGenerationService;
 
-    public List<MessageDTO> getMessagesFromConversation(String conversationId, String email) {
-        if(!conversationRepository.existsByConversationIdAndParticipantsEmail(conversationId, email)) throw new ResourceAccessException("Conversation Not found  with conversation Id: " + conversationId);
+    public MessageListDTO getMessagesFromConversation(String conversationCode, String email) {
+        conversationService.isPartOfConversation(conversationCode, email);
 
-        List<Message> messages = messageRepository.findByConversationConversationId(conversationId);
-        return messageMapper.toDTO(messages);
+        List<Message> messages =
+                messageRepository.findByConversationConversationCode(conversationCode);
+
+        return new MessageListDTO(messageMapper.toDTO(messages));
     }
 
-    public boolean putMessage(MessageDTO messageDTO) {
-        if (messageDTO == null ||
-            messageDTO.getConversationId() == null ||
-            messageDTO.getSenderId() == null ||
-            !conversationRepository.existsByConversationIdAndParticipantsUserId(
-                messageDTO.getConversationId(), 
-                messageDTO.getSenderId()
-            )
-        )  return false;
+    public void sendMessage(String email, MessageRequestDTO messageRequestDTO) {
+        Conversation conversation = conversationRepository
+                .findByConversationCode(messageRequestDTO.getConversationId())
+                .orElseThrow(() -> new IllegalArgumentException("Conversation not found"));
+    
+        conversationService.isPartOfConversation(messageRequestDTO.getConversationId(), email);
 
-        Message message = messageService.toEntity(messageDTO);
-        message.setMessageId(UUID.randomUUID().toString());
+        User sender = userRepository.findByEmail(email)
+                                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Message message = new Message();
+        message.setConversation(conversation);
+        message.setSender(sender);
+        message.setMessageCode(codeGenerationService.generateUniqueMessageCode());
+        message.setContent(messageRequestDTO.getContent());
 
         messageRepository.save(message);
-        return true;
     }
 
-    public boolean deleteMessage(MessageDTO messageDTO) {
+    public void deleteMessage(String messageCode, String email) {
+        Message message = messageRepository.findByMessageCode(messageCode)
+                .orElseThrow(() -> new IllegalArgumentException("Message not found"));
 
-        if (messageDTO == null ||
-            messageDTO.getMessageId() == null ||
-            messageDTO.getConversationId() == null ||
-            messageDTO.getSenderId() == null ||
-            !conversationRepository.existsByConversationIdAndParticipantsUserId(
-                messageDTO.getConversationId(),
-                messageDTO.getSenderId()
-            ) ||
-            !messageRepository.existsByMessageIdAndSenderUserId(messageDTO.getMessageId(), messageDTO.getSenderId())
-        ) return false;
+        if (!message.getSender().getEmail().equals(email)) {
+            throw new IllegalArgumentException("Cannot delete others' messages");
+        }
 
-        messageRepository.deleteById(messageDTO.getMessageId());
-        return true;
+        messageRepository.delete(message);
     }
-
-
-    public boolean deleteMessage(List<MessageDTO> messageDTOs) {
-
-        if (messageDTOs == null || messageDTOs.isEmpty())
-            return false;
-
-        MessageDTO first = messageDTOs.get(0);
-
-        if (first.getConversationId() == null ||
-            first.getSenderId() == null ||
-            !conversationRepository.existsByConversationIdAndParticipantsUserId(
-                first.getConversationId(),
-                first.getSenderId()
-            )
-        ) return false;
-
-        boolean sameConversationAndSender = messageDTOs.stream()
-                .allMatch(m ->
-                    first.getConversationId().equals(m.getConversationId()) &&
-                    first.getSenderId().equals(m.getSenderId())
-                );
-
-        if (!sameConversationAndSender) return false;
-
-        List<String> messageIds = messageDTOs.stream()
-                .map(MessageDTO::getMessageId)
-                .toList();
-
-        long count = messageRepository
-                .countByMessageIdInAndSenderUserId(messageIds, first.getSenderId());
-
-        if (count != messageIds.size()) return false;
-
-        messageRepository.deleteByMessageIdInAndSenderUserId(
-                messageIds,
-                first.getSenderId()
-        );
-
-        return true;
-    }
-
 }

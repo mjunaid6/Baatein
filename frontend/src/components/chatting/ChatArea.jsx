@@ -1,6 +1,6 @@
 import InputArea from "./InputArea";
 import { chats } from "../../utils/arrays";
-import Chats from "./Chats";
+import Chat from "./Chat";
 import { useEffect, useRef, useState } from "react";
 
 const ChatArea = ({ currFriend ,setCurrFriend}) => {
@@ -53,7 +53,7 @@ const ChatArea = ({ currFriend ,setCurrFriend}) => {
                     </div>
 
                     <div className={`relative z-10 flex-1 min-h-0 flex flex-col chat-fade-in`}>
-                        <Chats chats={messages} sender={"U016"} />
+                        <Chat chats={messages} sender={currFriend.friendId} />
                         <InputArea />
                     </div>
                 </>

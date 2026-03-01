@@ -7,6 +7,8 @@ import java.util.Set;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,7 +38,19 @@ public class Conversation {
     )
     private Set<User> participants = new HashSet<>();
 
+    private String conversationCode;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    private String name;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public enum Type {
+        PRIVATE,
+        GROUP
+    }
 }
 

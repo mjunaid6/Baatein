@@ -1,49 +1,39 @@
-import { useState, useEffect } from "react";
-import '../../index.css';
-import FriendListCard from './FriendListCard'
-import { getFriends } from "../../utils/data/friendData";
-import SearchBar from "./SearchBar";
-import EndBar from "./EndBar";
+import { useEffect, useState } from "react";
+import { getFriends } from "../../utils/data/data";
+import FriendListCard from "./FriendListCard";
 
-const FriendList = ({ sideBar, setSideBar, setCurrFriend }) => {
-
+const FriendList = ({ setCurrFriend }) => {
     const [friends, setFriends] = useState([]);
 
     useEffect(() => {
         const fetchFriends = async () => {
-            const data = await getFriends();
-            setFriends(data);
+            try {
+                const data = await getFriends();
+                setFriends(data || []);
+            } catch (err) {
+                console.error("Failed to load friends", err);
+            }
         };
 
         fetchFriends();
     }, []);
 
-    return (
-        <div 
-            className={`
-                absolute top-0 left-0
-                w-full h-full 
-                transition-transform duration-300 
-                ${sideBar ? "translate-x-0" : "-translate-x-full"} 
-                flex flex-col border-r-2 border-purple-300
-            `}
-        >
-            <SearchBar setSideBar={setSideBar} />
-            
-            <div className="overflow-y-scroll hide-scroll-bar p-1 flex-1">
-                {friends.map((friend, index) => (
-                    <FriendListCard 
-                        key={friend.friendshipCode}
-                        onSelect={() => setCurrFriend(friend)}
-                        imgUrl={friend.imgUrl} 
-                        name={friend.friendName} 
-                    />
-                ))}
-            </div>
+    const handleSelect = (friend) => {
+        setCurrFriend(friend);
+    };
 
-            <EndBar/>
+    return (
+        <div className="flex flex-col gap-2">
+            {friends.map(friend => (
+                <FriendListCard
+                    key={friend.friendId}
+                    imgUrl={friend.imgUrl}
+                    name={friend.friendName}
+                    onSelect={() => handleSelect(friend)}
+                />
+            ))}
         </div>
     );
-}
+};
 
 export default FriendList;

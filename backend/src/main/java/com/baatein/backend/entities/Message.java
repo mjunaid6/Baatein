@@ -28,6 +28,8 @@ public class Message {
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
 
+    private String messageCode;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "sender_id")
     private User sender;

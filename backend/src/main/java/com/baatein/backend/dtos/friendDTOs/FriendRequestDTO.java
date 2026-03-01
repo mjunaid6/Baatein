@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FriendRequestDTO {
-    private String friendshipCode;
+    private String friendshipId;
     private String friendName;
     private String imgUrl;
 }

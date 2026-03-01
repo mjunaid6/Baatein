@@ -131,26 +131,26 @@ export const adminsList = [
 
 
 export const chats = [
-  { id: "m0001", from: "U016", to: "U001", message: "Hey, how are you?" },
-  { id: "m0002", from: "U001", to: "U016", message: "I'm good! Just working on a project." },
-  { id: "m0003", from: "U016", to: "U001", message: "Oh nice, what are you building?" },
-  { id: "m0004", from: "U001", to: "U016", message: "A chat UI with glassmorphism effects." },
-  { id: "m0005", from: "U016", to: "U001", message: "That sounds beautiful! Need any help?" },
-  { id: "m0006", from: "U001", to: "U016", message: "Maybe later. Still figuring out scroll handling." },
-  { id: "m0007", from: "U016", to: "U001", message: "Use flex-1 for the message area, it works great." },
-  { id: "m0008", from: "U001", to: "U016", message: "Yes, I tried it and it's perfect now!" },
-  { id: "m0009", from: "U016", to: "U001", message: "Awesome! How does the crystal background look?" },
-  { id: "m0010", from: "U001", to: "U016", message: "It looks insane now! Super premium vibe." },
-  { id: "m0011", from: "U016", to: "U001", message: "Great! Add gradient blobs for extra style." },
-  { id: "m0012", from: "U001", to: "U016", message: "Already did. The chat section looks so aesthetic." },
-  { id: "m0013", from: "U016", to: "U001", message: "Nice! Are you adding message timestamps too?" },
-  { id: "m0014", from: "U001", to: "U016", message: "Yeah, after I finish message storage." },
-  { id: "m0015", from: "U016", to: "U001", message: "Cool, let me know if you want animation ideas." },
-  { id: "m0016", from: "U001", to: "U016", message: "Sure! I might add typing dots next." },
-  { id: "m0017", from: "U016", to: "U001", message: "Typing dots always make chats feel alive." },
-  { id: "m0018", from: "U001", to: "U016", message: "True! I want to recreate a WhatsApp-like smooth feel." },
-  { id: "m0019", from: "U016", to: "U001", message: "Then use smooth scroll + soft shadows." },
-  { id: "m0020", from: "U001", to: "U016", message: "Thanks! This is shaping into a polished chat UI." }
+  { id: "m0001", from: "PS4W3T", to: "6UIEKD", message: "Hey, how are you?" },
+  { id: "m0002", from: "6UIEKD", to: "PS4W3T", message: "I'm good! Just working on a project." },
+  { id: "m0003", from: "PS4W3T", to: "6UIEKD", message: "Oh nice, what are you building?" },
+  { id: "m0004", from: "6UIEKD", to: "PS4W3T", message: "A chat UI with glassmorphism effects." },
+  { id: "m0005", from: "PS4W3T", to: "6UIEKD", message: "That sounds beautiful! Need any help?" },
+  { id: "m0006", from: "6UIEKD", to: "PS4W3T", message: "Maybe later. Still figuring out scroll handling." },
+  { id: "m0007", from: "PS4W3T", to: "6UIEKD", message: "Use flex-1 for the message area, it works great." },
+  { id: "m0008", from: "6UIEKD", to: "PS4W3T", message: "Yes, I tried it and it's perfect now!" },
+  { id: "m0009", from: "PS4W3T", to: "6UIEKD", message: "Awesome! How does the crystal background look?" },
+  { id: "m0010", from: "6UIEKD", to: "PS4W3T", message: "It looks insane now! Super premium vibe." },
+  { id: "m0011", from: "PS4W3T", to: "6UIEKD", message: "Great! Add gradient blobs for extra style." },
+  { id: "m0012", from: "6UIEKD", to: "PS4W3T", message: "Already did. The chat section looks so aesthetic." },
+  { id: "m0013", from: "PS4W3T", to: "6UIEKD", message: "Nice! Are you adding message timestamps too?" },
+  { id: "m0014", from: "6UIEKD", to: "PS4W3T", message: "Yeah, after I finish message storage." },
+  { id: "m0015", from: "PS4W3T", to: "6UIEKD", message: "Cool, let me know if you want animation ideas." },
+  { id: "m0016", from: "6UIEKD", to: "PS4W3T", message: "Sure! I might add typing dots next." },
+  { id: "m0017", from: "PS4W3T", to: "6UIEKD", message: "Typing dots always make chats feel alive." },
+  { id: "m0018", from: "6UIEKD", to: "PS4W3T", message: "True! I want to recreate a WhatsApp-like smooth feel." },
+  { id: "m0019", from: "PS4W3T", to: "6UIEKD", message: "Then use smooth scroll + soft shadows." },
+  { id: "m0020", from: "6UIEKD", to: "PS4W3T", message: "Thanks! This is shaping into a polished chat UI." }
 ];
 
 export const requests = [
