@@ -1,5 +1,7 @@
 package com.baatein.backend.dtos.friendDTOs;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -10,8 +12,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FriendDTO {
-    private String friendshipCode;
-    private String friendName;
-    private String imgUrl;
+public class FriendRequestListDTO {
+    private List<FriendRequestDTO> friendRequests;
 }

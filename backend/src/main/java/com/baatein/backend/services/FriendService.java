@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.baatein.backend.dtos.friendDTOs.FriendDTO;
+import com.baatein.backend.dtos.friendDTOs.FriendRequestDTO;
 import com.baatein.backend.entities.Friendship;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.FriendshipRepository;
@@ -35,11 +36,27 @@ public class FriendService {
         for(Friendship friendship : friendships) {
             User user = friendship.getUser();
             User friend = friendship.getFriend();
-            if(user.getEmail() == email) friends.add(new FriendDTO(user.getUserName(), user.getImgUrl()));
-            else friends.add(new FriendDTO(friend.getUserName(), friend.getImgUrl()));
+            if(user.getEmail() == email) friends.add(new FriendDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
+            else friends.add(new FriendDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
         }
 
         return friends;
+    }
+
+    public List<FriendRequestDTO> getFriendRequestsUsingEmail(String email) {
+        if(email == null) return new ArrayList<>();
+
+        List<Friendship> friendships = friendshipRepository.getFriendshipsFromEmail(email);
+
+        List<FriendRequestDTO> friendRequests = new ArrayList<>();
+        for(Friendship friendship : friendships) {
+            User user = friendship.getUser();
+            User friend = friendship.getFriend();
+            if(user.getEmail() == email) friendRequests.add(new FriendRequestDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl()));
+            else friendRequests.add(new FriendRequestDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl()));
+        }
+
+        return friendRequests;
     }
 
     public void addFriend(String userEmail, String friendCode) {
@@ -50,6 +67,8 @@ public class FriendService {
         User friend = userRepository
                                 .findByFriendCode(friendCode)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if(friendshipRepository.existsByUserAndFriend(user, friend)) return;
         
         Friendship friendship = new Friendship(
                                                 UUID.randomUUID().toString(),

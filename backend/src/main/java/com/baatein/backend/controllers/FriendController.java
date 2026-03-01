@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baatein.backend.dtos.friendDTOs.AddFriendDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendListResponseDTO;
+import com.baatein.backend.dtos.friendDTOs.FriendRequestDTO;
+import com.baatein.backend.dtos.friendDTOs.FriendRequestListDTO;
 import com.baatein.backend.services.FriendService;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +41,19 @@ public class FriendController {
         return ResponseEntity
                             .status(HttpStatus.OK)
                             .body(new FriendListResponseDTO(friends));
+    }
+
+    @GetMapping("/getFriendRequests")
+    public ResponseEntity<FriendRequestListDTO> getFriendRequests() {
+        String email = SecurityContextHolder.getContext()
+                                            .getAuthentication()
+                                            .getName();
+
+        List<FriendRequestDTO> friendRequests = friendService.getFriendRequestsUsingEmail(email);
+        
+        return ResponseEntity
+                            .status(HttpStatus.OK)
+                            .body(new FriendRequestListDTO(friendRequests));
     }
     
     @PutMapping("/addFriend")
