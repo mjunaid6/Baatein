@@ -44,6 +44,9 @@ public class User {
     @Column(name = "friend_code", length = 6, unique = true, nullable = false)
     private String friendCode;
 
+    @ManyToMany(mappedBy = "participants")
+    private Set<Conversation> conversations = new HashSet<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Friendship> friends = new HashSet<>();
 

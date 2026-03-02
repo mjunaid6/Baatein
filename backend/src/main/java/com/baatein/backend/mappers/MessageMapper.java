@@ -10,7 +10,8 @@ import com.baatein.backend.entities.Message;
 
 @Mapper(componentModel = "spring")
 public interface MessageMapper {
-    @Mapping(source = "sender.userId", target = "senderId")
+    @Mapping(source = "sender.friendCode", target = "senderId")
+    @Mapping(source = "messageCode", target = "messageId")
     
     MessageDTO toDTO(Message message);
     List<MessageDTO> toDTO(List<Message> message);

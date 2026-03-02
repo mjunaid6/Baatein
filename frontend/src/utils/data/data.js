@@ -40,4 +40,12 @@ export const getProfile = async () => {
     }
 };
 
-
+export const getMessages = async (id) => {
+    try {
+        const res = await api.get(`/chat/${id}/messages`);
+        return res.data.messages;
+    } catch (err) {
+        console.error("Fetching messages failed:", err);
+        throw err;
+    }
+};

@@ -1,66 +1,87 @@
 import InputArea from "./InputArea";
-import { chats } from "../../utils/arrays";
 import Chat from "./Chat";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { sendMessage } from "../../utils/apiCalls";
+import { getMessages } from "../../utils/data/data";
 
-const ChatArea = ({ currFriend ,setCurrFriend}) => {
-    const [messages, setMessages] = useState(chats);
+const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        if(!currFriend) return;
+        if (!currConversation) return;
+
+        const fetchMessages = async () => {
+            try {
+                const data = await getMessages(currConversation.conversationId);
+                setMessages(data || []);
+            } catch (err) {
+                console.error("Failed to fetch messages", err);
+            }
+        };
+
+        fetchMessages();
+    }, [currConversation]);
+
+    const handleSendMessage = async (content) => {
+        if (!content?.trim()) return;
+
+        try {
+            await sendMessage(currConversation.conversationId, content);
+            
+            const updatedMessages = await getMessages(currConversation.conversationId);
+            setMessages(updatedMessages || []);
+        } catch (err) {
+            console.error("Failed to send message", err);
+        }
+    };
+
+    useEffect(() => {
+        if (!currConversation) return;
 
         const handleKeyDown = (e) => {
-            if(e.key === "Escape") setCurrFriend(null);
-        }
-        window.addEventListener("keydown",handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown",handleKeyDown);
-        }
-    }, [currFriend])
+            if (e.key === "Escape") setCurrConversation(null);
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [currConversation, setCurrConversation]);
 
     return (
-        <div 
-        className="relative flex flex-col flex-1 h-screen bg-linear-to-br from-purple-800/40 via-indigo-900/40 to-blue-900/40">
+        <div className="relative flex flex-col flex-1 h-screen bg-linear-to-br from-purple-800/40 via-indigo-900/40 to-blue-900/40">
             <div className="absolute inset-0 bg-white/10 backdrop-blur-2xl border border-white/20"></div>
 
-            <div className="absolute right-20 top-25 w-50 h-50 rounded-2xl bg-white/20 rotate-12 shadow-xl"></div>
-            <div className="absolute left-20 bottom-25 w-50 h-50 rounded-full bg-white/20 rotate-12 shadow-xl"></div>
-
-            {!currFriend ? (
-                <div className={`relative z-10 flex flex-1 items-center justify-center text-2xl text-white/70 chat-fade-in `}>
+            {!currConversation ? (
+                <div className="relative z-10 flex flex-1 items-center justify-center text-2xl text-white/70">
                     Select a friend to start chatting
                 </div>
             ) : (
                 <>
-                    <div 
-                    className={`z-10 sticky top-0 w-full h-16 px-8 flex items-center gap-5 bg-white/20 backdrop-blur-2xl rounded-b-3xl chat-fade-in`}
-                    
-                    >
+                    <div className="z-10 sticky top-0 w-full h-16 px-8 flex items-center gap-5 bg-white/20 backdrop-blur-2xl rounded-b-3xl">
                         <img
-                            src={currFriend.imageUrl}
+                            src={currConversation.imageUrl || "/default-avatar.png"}
                             className="h-12 w-12 rounded-full object-cover"
-                            alt={currFriend.name}
+                            alt={currConversation.name}
                         />
                         <h2 className="text-xl text-white">
-                            {currFriend.name}
+                            {currConversation.name}
                         </h2>
 
-                        <button 
-                        onClick={() => setCurrFriend(null)}
-                        className="absolute right-8 px-3 py-1 h-8 rounded-2xl bg-purple-300 hover:bg-purple-400 border border-white/30 backdrop-blur-lg cursor-pointer">
+                        <button
+                            onClick={() => setCurrConversation(null)}
+                            className="absolute right-8 px-3 py-1 h-8 rounded-2xl bg-purple-300 hover:bg-purple-400 border border-white/30 backdrop-blur-lg"
+                        >
                             Close
                         </button>
                     </div>
 
-                    <div className={`relative z-10 flex-1 min-h-0 flex flex-col chat-fade-in`}>
-                        <Chat chats={messages} sender={currFriend.friendId} />
-                        <InputArea />
+                    <div className="relative z-10 flex-1 min-h-0 flex flex-col">
+                        <Chat chats={messages} sender={profile?.friendId} />
+                        <InputArea handleSendMessage={handleSendMessage} />
                     </div>
                 </>
             )}
         </div>
     );
 };
-
 
 export default ChatArea;

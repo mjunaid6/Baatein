@@ -11,6 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageRequestDTO {
-    private String conversationId;
     private String content;
 }

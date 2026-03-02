@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../auth/api";
+import { addFriend } from "../../utils/apiCalls";
 
 const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
   const [friendId, setFriendId] = useState("");
@@ -20,9 +21,7 @@ const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
       setError("");
       setMessage("");
 
-      const resp = await api.put("/friend/addFriend", {
-        friendId: friendId.trim(),
-      });
+      await addFriend(friendId);
 
       setMessage(resp.data || "Friend request sent successfully.");
       setFriendId("");

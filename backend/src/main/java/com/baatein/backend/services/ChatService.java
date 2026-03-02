@@ -37,12 +37,12 @@ public class ChatService {
         return new MessageListDTO(messageMapper.toDTO(messages));
     }
 
-    public void sendMessage(String email, MessageRequestDTO messageRequestDTO) {
+    public void sendMessage(String email, MessageRequestDTO messageRequestDTO, String conversationId) {
         Conversation conversation = conversationRepository
-                .findByConversationCode(messageRequestDTO.getConversationId())
+                .findByConversationCode(conversationId)
                 .orElseThrow(() -> new IllegalArgumentException("Conversation not found"));
     
-        conversationService.isPartOfConversation(messageRequestDTO.getConversationId(), email);
+        conversationService.isPartOfConversation(conversationId, email);
 
         User sender = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new IllegalArgumentException("User not found"));

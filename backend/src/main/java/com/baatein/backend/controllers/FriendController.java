@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baatein.backend.dtos.friendDTOs.AddFriendDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendListResponseDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendRequestDTO;
@@ -56,14 +54,14 @@ public class FriendController {
                             .body(new FriendRequestListDTO(friendRequests));
     }
     
-    @PutMapping("/addFriend")
-    public ResponseEntity<String> addFriend(@RequestBody AddFriendDTO addFriendDTO) {
+    @PutMapping("/{friendId}/addFriend")
+    public ResponseEntity<String> addFriend(@PathVariable String friendId) {
         String email = SecurityContextHolder
                                             .getContext()
                                             .getAuthentication()
                                             .getName();
                                             
-        friendService.addFriend(addFriendDTO.getFriendId(), email);
+        friendService.addFriend(friendId, email);
 
         return ResponseEntity.ok("Friend request sent successfully.");
     }

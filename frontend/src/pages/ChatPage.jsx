@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatArea from "../components/chatting/ChatArea";
 import BG from "../components/styles/BG";
 import SideBar from "../components/SideBar";
+import { getProfile } from "../utils/data/data";
 
 const ChatPage = () => {
     const [sideBar, setSideBar] = useState(true);
-    const [currFriend, setCurrFriend] = useState(null);
-    const [activeTab, setActiveTab] = useState("conversations");
+    const [currConversation, setCurrConversation] = useState(null);
+    const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        fetchProfile();
+    }, [])
+
+    const fetchProfile = async () => {
+        const data = await getProfile();
+        setProfile(data);
+    }
 
     return (
         <div className="relative w-screen h-screen overflow-hidden flex">
@@ -15,13 +25,13 @@ const ChatPage = () => {
                 <SideBar 
                     sideBar={sideBar}
                     setSideBar={setSideBar}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    currFriend={currFriend}
-                    setCurrFriend={setCurrFriend}
+                    currConversation={currConversation}
+                    setCurrConversation={setCurrConversation}
+                    profile={profile}
+                    setProfile={setProfile}
                 />
             </div>
-            <ChatArea currFriend={currFriend} setCurrFriend={setCurrFriend}/>
+            <ChatArea currConversation={currConversation} setCurrConversation={setCurrConversation} profile={profile}/>
         </div>
     )
 }

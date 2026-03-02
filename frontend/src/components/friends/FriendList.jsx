@@ -1,13 +1,15 @@
+import { getConversationFromFriend } from "../../utils/apiCalls";
 import FriendListCard from "./FriendListCard";
 
-const FriendList = ({ friends, setFriends, setCurrFriend }) => {
+const FriendList = ({ friends, setFriends, setCurrConversation }) => {
 
-    const handleSelect = (friend) => {
-        setCurrFriend(friend);
+    const handleSelect = async (id) => {
+        const conv = await getConversationFromFriend(id);
+        setCurrConversation(conv);
     };
 
     const onDelete = (id) => {
-        setCurrFriend(null);
+        setCurrConversation(null);
         const updatedFriends = friends.filter(friend => friend.friendshipId !== id);
         setFriends(updatedFriends);
     }
@@ -21,7 +23,7 @@ const FriendList = ({ friends, setFriends, setCurrFriend }) => {
                     imgUrl={friend.imgUrl}
                     name={friend.friendName}
                     isBlocked={friend.isBlocked}
-                    onSelect={() => handleSelect(friend)}
+                    onSelect={() => handleSelect(friend.friendshipId)}
                     onDelete={onDelete}
                 />
             ))}

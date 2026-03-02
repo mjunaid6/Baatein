@@ -1,8 +1,16 @@
 import { useState } from "react";
 import ConversationCard from "./ConversationCard";
 
-const ConversationList = ({ conversations, setCurrFriend }) => {
+const ConversationList = ({ conversations, setConversations, currConversation, setCurrConversation }) => {
     const [activeType, setActiveType] = useState("private");
+
+    const onLeave = (id) => {
+        if (currConversation?.conversationId === id) {
+            setCurrConversation(null);
+        }
+        const updatedConversations = conversations.filter(conv => conv.conversationId !== id);
+        setConversations(updatedConversations);
+    }
 
     const privateConversations = conversations.filter(
         conv => conv.type === "PRIVATE"
@@ -16,6 +24,7 @@ const ConversationList = ({ conversations, setCurrFriend }) => {
         activeType === "private"
             ? privateConversations
             : groupConversations;
+
 
     return (
         <div className="flex flex-col gap-3">
@@ -57,7 +66,8 @@ const ConversationList = ({ conversations, setCurrFriend }) => {
                         name={conv.name}
                         imgUrl={conv.imgUrl}
                         lastMessage={conv.lastMessage}
-                        onSelect={() => setCurrFriend(conv)}
+                        onSelect={() => setCurrConversation(conv)}
+                        onLeave={onLeave}
                     />
                 ))}
             </div>

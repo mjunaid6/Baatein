@@ -7,28 +7,26 @@ import NavBar from "./NavBar";
 import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 
-const SideBar = ({ sideBar, setSideBar, activeTab, setActiveTab, currFriend, setCurrFriend }) => {
+const SideBar = ({ sideBar, setSideBar, currConversation, setCurrConversation, profile, setProfile }) => {
     const [friends, setFriends] = useState([]);
     const [conversations, setConversations] = useState([]);
     const [requests, setRequests] = useState([]);
-    const [profile, setProfile] = useState(null);
+    const [activeTab, setActiveTab] = useState("conversations");
 
     useEffect(() => {
         fetchAllData();
     }, []);
 
     const fetchAllData = async () => {
-        const [friendsRes, convRes, reqRes, profileRes] = await Promise.all([
+        const [friendsRes, convRes, reqRes] = await Promise.all([
             getFriends(),
             getConversations(),
             getFriendRequests(),
-            getProfile()
         ]);
 
         setFriends(friendsRes);
         setConversations(convRes);
         setRequests(reqRes);
-        setProfile(profileRes);
     };
 
     const showSearch = activeTab !== "profile";
@@ -42,11 +40,11 @@ const SideBar = ({ sideBar, setSideBar, activeTab, setActiveTab, currFriend, set
 
             <div className="flex-1 overflow-y-auto hide-scroll-bar p-2">
                 {activeTab === "conversations" && (
-                    <ConversationList conversations={conversations} currFriend={currFriend} setCurrFriend={setCurrFriend}/>
+                    <ConversationList conversations={conversations} setConversations={setConversations} currConversation={currConversation} setCurrConversation={setCurrConversation}/>
                 )}
 
                 {activeTab === "friends" && (
-                    <FriendList friends={friends} setFriends={setFriends} sideBar={sideBar} setSideBar={setSideBar} setCurrFriend={setCurrFriend}/>
+                    <FriendList friends={friends} setFriends={setFriends} sideBar={sideBar} setSideBar={setSideBar} setCurrConversation={setCurrConversation}/>
                 )}
 
                 {activeTab === "requests" && (
@@ -54,7 +52,7 @@ const SideBar = ({ sideBar, setSideBar, activeTab, setActiveTab, currFriend, set
                 )}
 
                 {activeTab === "profile" && (
-                    <Profile profile={profile}/>
+                    <Profile profile={profile} setProfile={setProfile} />
                 )}
             </div>
 

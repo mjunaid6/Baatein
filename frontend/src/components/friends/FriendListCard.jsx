@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteFriend, blockFriend, unblockFriend } from "../../utils/apiCalls";
 
 const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => {
@@ -8,7 +8,7 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
   const handleDelete = async (e) => {
     e.stopPropagation();
     try {
-      deleteFriend(id);
+      await deleteFriend(id);
       onDelete(id);
       setOptions(false);
     } catch (err) {
@@ -16,16 +16,27 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
     }
   };
 
-  const handleBlock = async (e) => {
+  const handleBlockOrUnblock = async (e) => {
     e.stopPropagation();
     try {
-      blocked ? unblockFriend(id) : blockFriend(id);
+      blocked ? await unblockFriend(id) : await blockFriend(id);
       setOptions(false);
       setBlocked(!blocked);
     } catch (err) {
       console.error("Failed to block friend", err);
     }
   };
+
+  useEffect(() => {
+      if (!options) return;
+
+      const handleKeyDown = (e) => {
+          if (e.key === "Escape") setOptions(false);
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [options]);
 
   return (
     <div
@@ -66,7 +77,7 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
                      overflow-hidden z-20"
         >
           <button
-            onClick={handleBlock}
+            onClick={handleBlockOrUnblock}
             className="px-3 py-2 text-sm text-yellow-600 
                        hover:bg-yellow-100 text-left"
           >

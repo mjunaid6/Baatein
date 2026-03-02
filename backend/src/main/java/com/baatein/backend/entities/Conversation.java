@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +39,7 @@ public class Conversation {
     )
     private Set<User> participants = new HashSet<>();
 
+    @Column(name = "conversation_code", unique = true, nullable = false)
     private String conversationCode;
 
     @Enumerated(EnumType.STRING)

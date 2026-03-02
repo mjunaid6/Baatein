@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageDTO {
+    private String messageId;
     private String senderId;
     private String content;
 }

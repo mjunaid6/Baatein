@@ -2,15 +2,21 @@ package com.baatein.backend.services;
 
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.baatein.backend.dtos.conversationDTOs.ConversationDTO;
 import com.baatein.backend.dtos.conversationDTOs.ConversationListDTO;
 import com.baatein.backend.entities.Conversation;
+import com.baatein.backend.entities.Friendship;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.ConversationRepository;
+import com.baatein.backend.repositories.FriendshipRepository;
+import com.baatein.backend.repositories.UserRepository;
 import com.baatein.backend.util.CodeGenerationService;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -18,6 +24,8 @@ import lombok.AllArgsConstructor;
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final CodeGenerationService codeGenerationService;
+    private final UserRepository userRepository;
+    private final FriendshipRepository friendshipRepository;
 
     public ConversationListDTO getConversations(String email) {
         List<Conversation> conversations = conversationRepository.findUserConversations(email);
@@ -65,6 +73,18 @@ public class ConversationService {
         }
     }
 
+    public ConversationDTO getOrCreatePrivateConversation(String email, String friendshipCode) {
+        Friendship friendship = friendshipRepository.findByFriendshipCode(friendshipCode)
+                                                    .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
+
+        User user = friendship.getUser();
+        User friend = friendship.getUser();
+
+        if(!user.getEmail().equals(email) && !friend.getEmail().equals(email)) throw new AccessDeniedException("Cannot access conversation");
+
+        return mapToDTO(getOrCreatePrivateConversation(user, friend), email);
+    }
+
     public Conversation getOrCreatePrivateConversation(User user1, User user2) {
         return conversationRepository
                 .findPrivateConversation(user1, user2)
@@ -78,4 +98,28 @@ public class ConversationService {
                     return conversationRepository.save(conversation);
                 });
     }
+
+    @Transactional
+    public void leaveConversation(String conversationId, String email) {
+
+        Conversation conversation = conversationRepository
+                .findByConversationCode(conversationId)
+                .orElseThrow(() -> new EntityNotFoundException("Conversation not found"));
+
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!conversation.getParticipants().contains(user))
+            throw new IllegalStateException("User is not part of this conversation");
+
+        conversation.getParticipants().remove(user);
+        user.getConversations().remove(conversation);
+
+        if (conversation.getParticipants().isEmpty()) {
+            conversationRepository.delete(conversation);
+        }
+    }
+
+
 }
