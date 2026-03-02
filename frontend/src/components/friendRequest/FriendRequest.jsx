@@ -3,22 +3,8 @@ import {getFriendRequests} from "../../utils/data/data";
 import FriendRequestCard from "./FriendRequestCard";
 import FriendRequestForm from "./FriendRequestForm";
 
-const FriendRequest = () => {
-    const [requests, setRequests] = useState([]);
+const FriendRequest = ({ requests, setRequests }) => {
     const [friendRequestForm, setFriendRequestForm] = useState(false);
-
-    useEffect(() => {
-        const fetchRequests = async () => {
-            try {
-                const data = await getFriendRequests();
-                setRequests(data);
-            } catch (err) {
-                console.error("Failed to load requests", err);
-            }
-        };
-
-        fetchRequests();
-    }, []);
 
     const handleAccepted = (id) => {
         setRequests(prev =>

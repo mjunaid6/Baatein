@@ -1,22 +1,6 @@
-import { useEffect, useState } from "react";
-import { getFriends } from "../../utils/data/data";
 import FriendListCard from "./FriendListCard";
 
-const FriendList = ({ setCurrFriend }) => {
-    const [friends, setFriends] = useState([]);
-
-    useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const data = await getFriends();
-                setFriends(data || []);
-            } catch (err) {
-                console.error("Failed to load friends", err);
-            }
-        };
-
-        fetchFriends();
-    }, []);
+const FriendList = ({ friends, setCurrFriend }) => {
 
     const handleSelect = (friend) => {
         setCurrFriend(friend);

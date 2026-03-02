@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { getConversations, getFriendRequests, getFriends, getProfile } from "../utils/data/data";
 import ConversationList from "./conversation/ConversationList";
 import FriendRequest from "./friendRequest/FriendRequest";
 import FriendList from "./friends/FriendList";
@@ -6,6 +8,28 @@ import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 
 const SideBar = ({ sideBar, setSideBar, activeTab, setActiveTab, currFriend, setCurrFriend }) => {
+    const [friends, setFriends] = useState([]);
+    const [conversations, setConversations] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        fetchAllData();
+    }, []);
+
+    const fetchAllData = async () => {
+        const [friendsRes, convRes, reqRes, profileRes] = await Promise.all([
+            getFriends(),
+            getConversations(),
+            getFriendRequests(),
+            getProfile()
+        ]);
+
+        setFriends(friendsRes);
+        setConversations(convRes);
+        setRequests(reqRes);
+        setProfile(profileRes);
+    };
 
     const showSearch = activeTab !== "profile";
 
@@ -18,19 +42,19 @@ const SideBar = ({ sideBar, setSideBar, activeTab, setActiveTab, currFriend, set
 
             <div className="flex-1 overflow-y-auto hide-scroll-bar p-2">
                 {activeTab === "conversations" && (
-                    <ConversationList currFriend={currFriend} setCurrFriend={setCurrFriend}/>
+                    <ConversationList conversations={conversations} currFriend={currFriend} setCurrFriend={setCurrFriend}/>
                 )}
 
                 {activeTab === "friends" && (
-                    <FriendList sideBar={sideBar} setSideBar={setSideBar} setCurrFriend={setCurrFriend}/>
+                    <FriendList friends={friends} sideBar={sideBar} setSideBar={setSideBar} setCurrFriend={setCurrFriend}/>
                 )}
 
                 {activeTab === "requests" && (
-                    <FriendRequest sideBar={sideBar} setSideBar={setSideBar}/>
+                    <FriendRequest requests={requests} setRequests={setRequests} sideBar={sideBar} setSideBar={setSideBar}/>
                 )}
 
                 {activeTab === "profile" && (
-                    <Profile />
+                    <Profile profile={profile}/>
                 )}
             </div>
 

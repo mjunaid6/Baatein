@@ -1,34 +1,66 @@
-import { useEffect, useState } from "react";
-import { getConversations } from "../../utils/data/data";
+import { useState } from "react";
 import ConversationCard from "./ConversationCard";
 
-const ConversationList = ({ setCurrFriend }) => {
-    const [conversations, setConversations] = useState([]);
+const ConversationList = ({ conversations, setCurrFriend }) => {
+    const [activeType, setActiveType] = useState("private");
 
-    useEffect(() => {
-        const fetchConversations = async () => {
-            try {
-                const data = await getConversations();
-                setConversations(data);
-            } catch (err) {
-                console.error("Failed to load conversations", err);
-            }
-        };
+    const privateConversations = conversations.filter(
+        conv => conv.type === "PRIVATE"
+    );
 
-        fetchConversations();
-    }, []);
+    const groupConversations = conversations.filter(
+        conv => conv.type === "GROUP"
+    );
+
+    const currentList =
+        activeType === "private"
+            ? privateConversations
+            : groupConversations;
 
     return (
-        <div className="flex flex-col gap-2">
-            {conversations.map(conv => (
-                <ConversationCard
-                    key={conv.conversationId}
-                    name={conv.name}
-                    imgUrl={conv.imgUrl}
-                    lastMessage={conv.lastMessage}
-                    onSelect={() => setCurrFriend(conv)}
-                />
-            ))}
+        <div className="flex flex-col gap-3">
+
+            <div className="flex bg-purple-200 rounded-xl p-1">
+                <button
+                    onClick={() => setActiveType("private")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold transition cursor-pointer
+                        ${activeType === "private"
+                            ? "bg-white text-purple-700 shadow"
+                            : "text-gray-600 hover:text-purple-600"
+                        }`}
+                >
+                    Private
+                </button>
+
+                <button
+                    onClick={() => setActiveType("group")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold transition cursor-pointer
+                        ${activeType === "group"
+                            ? "bg-white text-purple-700 shadow"
+                            : "text-gray-600 hover:text-purple-600"
+                        }`}
+                >
+                    Groups
+                </button>
+            </div>
+
+            <div className="flex flex-col gap-2">
+                {currentList.length === 0 && (
+                    <div className="text-center text-gray-500 mt-4">
+                        No {activeType} conversations
+                    </div>
+                )}
+
+                {currentList.map(conv => (
+                    <ConversationCard
+                        key={conv.conversationId}
+                        name={conv.name}
+                        imgUrl={conv.imgUrl}
+                        lastMessage={conv.lastMessage}
+                        onSelect={() => setCurrFriend(conv)}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

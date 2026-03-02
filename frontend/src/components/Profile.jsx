@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../utils/data/data";
 
-const Profile = () => {
-    const [profile, setProfile] = useState(null);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const data = await getProfile();
-                setProfile(data);
-            } catch (err) {
-                console.error("Failed to load profile", err);
-            }
-        };
-
-        fetchProfile();
-    }, []);
+const Profile = ({ profile }) => {
 
     if (!profile) return null;
 
