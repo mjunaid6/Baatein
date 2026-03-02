@@ -22,5 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-src/components/admin/Meme.jsx
-src/assets/meme_rajiv_talwar.mp4

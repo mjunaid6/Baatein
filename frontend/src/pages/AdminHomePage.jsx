@@ -7,7 +7,6 @@ import AdminDashboard from "../components/admin/AdminDashboard";
 import AdminBG from "../components/styles/AdminBG";
 import AdminList from "../components/admin/AdminsList";
 import AdminHelp from "../components/admin/AdminHelp";
-import Meme from "../components/admin/Meme";
 
 const AdminHomePage = () => {
     const [users,setUsers] = useState(arr);
@@ -20,7 +19,6 @@ const AdminHomePage = () => {
                 <Route path="users" element={<UserList users={users}/>}/>
                 <Route path="admins" element={<AdminList/>}/>
                 <Route path="help" element={<AdminHelp/>}/>
-                <Route path="payments" element={<Meme/>}/>
             </Routes>
         </div>
     )
