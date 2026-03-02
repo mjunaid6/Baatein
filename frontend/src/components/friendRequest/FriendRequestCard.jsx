@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { acceptFriendRequest } from "../../utils/apiCalls";
+import { acceptFriendRequest, rejectFriendRequest } from "../../utils/apiCalls";
 
-const FriendRequestCard = ({ id, name, imageUrl, handleAccepted }) => {
+const FriendRequestCard = ({ id, name, imageUrl, handleAcceptedOrRejected }) => {
   const [loading, setLoading] = useState(false);
 
   const handleAcceptFriend = async () => {
@@ -10,10 +10,25 @@ const FriendRequestCard = ({ id, name, imageUrl, handleAccepted }) => {
 
       await acceptFriendRequest(id);
 
-      handleAccepted(id);
+      handleAcceptedOrRejected(id);
       
     } catch (error) {
       console.error("Failed to accept request:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRejectFriend = async () => {
+    try {
+      setLoading(true);
+
+      await rejectFriendRequest(id);
+
+      handleAcceptedOrRejected(id);
+      
+    } catch (error) {
+      console.error("Failed to reject request:", error);
     } finally {
       setLoading(false);
     }
@@ -44,6 +59,16 @@ const FriendRequestCard = ({ id, name, imageUrl, handleAccepted }) => {
       >
         {loading ? "..." : <i className="ri-user-add-fill"></i>}
       </button>
+
+      <button
+        disabled={loading}
+        onClick={handleRejectFriend}
+        className="mr-3 text-xl text-gray-600 hover:text-red-500 
+                   disabled:opacity-50"
+      >
+        {loading ? "..." : <i className="ri-user-unfollow-line"></i>}
+      </button>
+      
 
     </div>
   );

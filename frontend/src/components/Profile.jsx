@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { getProfile } from "../utils/data/data";
-
 const Profile = ({ profile }) => {
 
     if (!profile) return null;

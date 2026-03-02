@@ -92,7 +92,8 @@ public class FriendController {
 
     @PostMapping("/{friendshipCode}/reject")
     public ResponseEntity<String> rejectFriendRequest(@PathVariable String friendshipCode) {
-        friendService.rejectRequest(friendshipCode);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        friendService.rejectRequest(email, friendshipCode);
         return ResponseEntity.ok("Rejected successfully");
     }
 

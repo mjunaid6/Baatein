@@ -14,7 +14,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship,String> {
     @Query("""
         SELECT f
         FROM Friendship f
-        WHERE f.status = com.baatein.backend.entities.Friendship.Status.FRIENDS
+        WHERE f.status != com.baatein.backend.entities.Friendship.Status.PENDING
         AND (f.user.email = :email OR f.friend.email = :email)
     """)
     List<Friendship> getFriendshipsFromEmail(String email);
@@ -31,5 +31,13 @@ public interface FriendshipRepository extends JpaRepository<Friendship,String> {
 
     Optional<Friendship> findByFriendshipCode(String friendshipCode);
 
-    boolean existsByUserAndFriend(User user, User friend);
+    @Query("""
+        SELECT COUNT(f) > 0
+        FROM Friendship f
+        WHERE 
+            (f.user = :user1 AND f.friend = :user2)
+            OR
+            (f.user = :user2 AND f.friend = :user1)
+    """)
+    boolean existsBetweenUsers(User user1, User user2);
 }

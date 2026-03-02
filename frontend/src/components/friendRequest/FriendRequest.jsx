@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import {getFriendRequests} from "../../utils/data/data";
+import { useState } from "react";
 import FriendRequestCard from "./FriendRequestCard";
 import FriendRequestForm from "./FriendRequestForm";
 
 const FriendRequest = ({ requests, setRequests }) => {
     const [friendRequestForm, setFriendRequestForm] = useState(false);
 
-    const handleAccepted = (id) => {
+    const handleAcceptedOrRejected = (id) => {
         setRequests(prev =>
-            prev.filter(req => req.friendshipCode !== id)
+            prev.filter(req => req.friendshipId !== id)
         );
     };
 
@@ -38,7 +37,7 @@ const FriendRequest = ({ requests, setRequests }) => {
                     id={req.friendshipId}
                     name={req.friendName}
                     imageUrl={req.imgUrl}
-                    handleAccepted={handleAccepted}
+                    handleAcceptedOrRejected={handleAcceptedOrRejected}
                 />
             ))}
         </div>

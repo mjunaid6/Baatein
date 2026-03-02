@@ -44,6 +44,7 @@ public class Conversation {
     private Type type;
 
     private String name;
+    private String imgUrl;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

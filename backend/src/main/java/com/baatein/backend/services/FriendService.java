@@ -37,16 +37,15 @@ public class FriendService {
         for(Friendship friendship : friendships) {
             User user = friendship.getUser();
             User friend = friendship.getFriend();
-            if(user.getEmail().equals(email)) friends.add(new FriendDTO(friend.getFriendCode(), friend.getUserName(), friend.getImgUrl()));
-            else friends.add(new FriendDTO(user.getFriendCode(), user.getUserName(), user.getImgUrl()));
+            String isBlocked = friendship.getStatus().name().equals("BLOCKED") ? "blocked" : "unblocked";
+            if(user.getEmail().equals(email)) friends.add(new FriendDTO(friendship.getFriendshipCode(), friend.getUserName(), friend.getImgUrl(), isBlocked));
+            else friends.add(new FriendDTO(friendship.getFriendshipCode(), user.getUserName(), user.getImgUrl(), isBlocked));
         }
 
         return friends;
     }
 
     public List<FriendRequestDTO> getFriendRequestsUsingEmail(String email) {
-        if(email == null) return new ArrayList<>();
-
         List<Friendship> friendships = friendshipRepository.getFriendRequetsFromEmail(email);
 
         List<FriendRequestDTO> friendRequests = new ArrayList<>();
@@ -67,7 +66,7 @@ public class FriendService {
                                 .findByFriendCode(friendCode)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if(friendshipRepository.existsByUserAndFriend(user, friend)) return;
+        if(friendshipRepository.existsBetweenUsers(user, friend)) return;
         
         Friendship friendship = new Friendship(
                                                 UUID.randomUUID().toString(),
@@ -85,6 +84,11 @@ public class FriendService {
         Friendship friendship = friendshipRepository
                                                     .findByFriendshipCode(friendshipCode)
                                                     .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
+
+        if (!friendship.getUser().getEmail().equals(userEmail) &&
+            !friendship.getFriend().getEmail().equals(userEmail))  throw new AccessDeniedException("Not allowed");
+
+        if (friendship.getStatus() == Friendship.Status.PENDING) throw new AccessDeniedException("Friendship still pending.");
 
         friendship.getUser().getFriends().remove(friendship);
         friendship.getFriend().getFriends().remove(friendship);
@@ -107,15 +111,20 @@ public class FriendService {
         friendship.setStatus(Friendship.Status.FRIENDS);
         friendshipRepository.save(friendship);
 
-        conversationService.createPrivateConversation(user, friend);
+        conversationService.getOrCreatePrivateConversation(user, friend);
     }
 
-    public void rejectRequest(String friendshipCode) {
+    public void rejectRequest(String email, String friendshipCode) {
         Friendship friendship = friendshipRepository
                                                     .findByFriendshipCode(friendshipCode)
                                                     .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
                                         
+        if (!friendship.getFriend().getEmail().equals(email)) throw new AccessDeniedException("You cannot accept this request");
+
+        if (friendship.getStatus() != Friendship.Status.PENDING) throw new IllegalStateException("Request is not pending");
+
         friendship.getUser().getFriends().remove(friendship);
+        friendship.getFriend().getFriends().remove(friendship);
 
         friendshipRepository.delete(friendship);
     }
@@ -128,7 +137,13 @@ public class FriendService {
         User user = userRepository
                                 .findByEmail(userEmail)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+
+        if (friendship.getStatus() == Friendship.Status.PENDING) throw new AccessDeniedException("Friendship still pending.");
         
+        if (!friendship.getUser().getEmail().equals(userEmail) &&
+            !friendship.getFriend().getEmail().equals(userEmail))  throw new AccessDeniedException("Not allowed");
+
         friendship.setStatus(Friendship.Status.BLOCKED);
         friendship.setBlockedBy(user);
 
@@ -139,8 +154,10 @@ public class FriendService {
         Friendship friendship = friendshipRepository
                                                     .findByFriendshipCode(friendshipCode)
                                                     .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
+
+        if (friendship.getStatus() != Friendship.Status.BLOCKED) throw new AccessDeniedException("Friendship is not blocked.");
         
-        if(friendship.getBlockedBy().getEmail() != userEmail) throw new AccessDeniedException("User cannot unblock");
+        if (!friendship.getBlockedBy().getEmail().equals(userEmail))  throw new AccessDeniedException("Not allowed");
 
         friendship.setStatus(Friendship.Status.FRIENDS);
         friendship.setBlockedBy(null);
