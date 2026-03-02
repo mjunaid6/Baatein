@@ -1,5 +1,6 @@
 package com.baatein.backend.services;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -78,7 +79,7 @@ public class ConversationService {
                                                     .orElseThrow(() -> new EntityNotFoundException("Friendship not found"));
 
         User user = friendship.getUser();
-        User friend = friendship.getUser();
+        User friend = friendship.getFriend();
 
         if(!user.getEmail().equals(email) && !friend.getEmail().equals(email)) throw new AccessDeniedException("Cannot access conversation");
 
@@ -94,6 +95,7 @@ public class ConversationService {
                     conversation.getParticipants().add(user2);
                     conversation.setConversationCode(codeGenerationService.generateUniqueConversationCode());
                     conversation.setType(Conversation.Type.PRIVATE);
+                    conversation.setMessages(new HashSet<>());
 
                     return conversationRepository.save(conversation);
                 });

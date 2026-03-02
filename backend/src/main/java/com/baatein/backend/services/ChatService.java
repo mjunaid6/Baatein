@@ -32,7 +32,7 @@ public class ChatService {
         conversationService.isPartOfConversation(conversationCode, email);
 
         List<Message> messages =
-                messageRepository.findByConversationConversationCode(conversationCode);
+                messageRepository.findByConversationConversationCodeOrderByTimeStampAsc(conversationCode);
 
         return new MessageListDTO(messageMapper.toDTO(messages));
     }

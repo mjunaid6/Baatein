@@ -10,6 +10,8 @@ import com.baatein.backend.entities.Message;
 public interface MessageRepository extends JpaRepository<Message,String> {
     List<Message> findByConversationConversationCode(String conversationCode);
 
+    List<Message> findByConversationConversationCodeOrderByTimeStampAsc(String conversationCode);
+
     boolean existsByMessageIdAndSenderUserId(String messageId, String senderId);
 
     long countByMessageIdInAndSenderUserId(List<String> messageIds, String senderId);
