@@ -12,6 +12,11 @@ const ConversationList = ({ conversations, setConversations, currConversation, s
         setConversations(updatedConversations);
     }
 
+    const handleConversationSelect = (conv) => {
+        if (currConversation?.conversationId === conv.conversationId) return;
+        setCurrConversation(conv);
+    }
+
     const privateConversations = conversations.filter(
         conv => conv.type === "PRIVATE"
     );
@@ -63,10 +68,11 @@ const ConversationList = ({ conversations, setConversations, currConversation, s
                 {currentList.map(conv => (
                     <ConversationCard
                         key={conv.conversationId}
+                        id={conv.conversationId}
                         name={conv.name}
                         imgUrl={conv.imgUrl}
                         lastMessage={conv.lastMessage}
-                        onSelect={() => setCurrConversation(conv)}
+                        onSelect={() => handleConversationSelect(conv)}
                         onLeave={onLeave}
                     />
                 ))}

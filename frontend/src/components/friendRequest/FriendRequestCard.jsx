@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { acceptFriendRequest, rejectFriendRequest } from "../../utils/apiCalls";
+import { defaultProfilePictureUrl } from "../../utils/data/data";
 
 const FriendRequestCard = ({ id, name, imageUrl, handleAcceptedOrRejected }) => {
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const FriendRequestCard = ({ id, name, imageUrl, handleAcceptedOrRejected }) => 
 
       <div className="w-16 h-full p-2">
         <img
-          src={imageUrl}
+          src={imageUrl || defaultProfilePictureUrl}
           alt={name}
           className="w-full h-full rounded-full object-cover"
         />

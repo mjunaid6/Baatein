@@ -1,3 +1,5 @@
+import { defaultProfilePictureUrl } from "../utils/data/data";
+
 const Profile = ({ profile, setProfile }) => {
 
     if (!profile) return null;
@@ -5,7 +7,7 @@ const Profile = ({ profile, setProfile }) => {
     return (
         <div className="flex flex-col items-center gap-4 p-6">
             <img
-                src={profile.imgUrl}
+                src={profile.imgUrl || defaultProfilePictureUrl}
                 alt="dp"
                 className="w-24 h-24 rounded-full object-cover 
                            outline-4 outline-purple-400"

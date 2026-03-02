@@ -44,7 +44,7 @@ const SideBar = ({ sideBar, setSideBar, currConversation, setCurrConversation, p
                 )}
 
                 {activeTab === "friends" && (
-                    <FriendList friends={friends} setFriends={setFriends} sideBar={sideBar} setSideBar={setSideBar} setCurrConversation={setCurrConversation}/>
+                    <FriendList friends={friends} setFriends={setFriends} sideBar={sideBar} setSideBar={setSideBar} currConversation={currConversation} setCurrConversation={setCurrConversation}/>
                 )}
 
                 {activeTab === "requests" && (

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { leaveConversation } from "../../utils/apiCalls";
+import { defaultProfilePictureUrl } from "../../utils/data/data";
 
 const ConversationCard = ({
   id,
@@ -50,7 +51,7 @@ const ConversationCard = ({
       >
         <div className="w-16 h-full p-2">
           <img
-            src={imgUrl || "/default-avatar.png"}
+            src={imgUrl || defaultProfilePictureUrl}
             alt={name}
             className="w-full h-full rounded-full object-cover"
           />
@@ -58,7 +59,7 @@ const ConversationCard = ({
 
         <div className="flex flex-col w-full overflow-hidden">
           <h2 className="font-bold text-[18px] text-gray-700 truncate">
-            {name}
+            {name || (type === "GROUP" ? "Unnamed Group" : "Unknown User")}
           </h2>
           <p className="text-sm text-gray-500 truncate">
             {lastMessage || "No messages yet"}
@@ -84,7 +85,7 @@ const ConversationCard = ({
               <button
                 onClick={() => setConfirmAction("leave")}
                 className="px-3 py-2 text-sm text-yellow-600 
-                           hover:bg-yellow-100 text-left"
+                           hover:bg-yellow-100 text-left cursor-pointer"
               >
                 Leave
               </button>
@@ -97,9 +98,7 @@ const ConversationCard = ({
                         bg-black/30 backdrop-blur-sm z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[300px] flex flex-col gap-4">
             <h3 className="text-lg font-semibold text-center">
-              {confirmAction === "delete"
-                ? "Are you sure you want to delete this conversation?"
-                : "Are you sure you want to leave this group?"}
+                Are you sure you want to leave this conversation?
             </h3>
 
             <div className="flex gap-3">

@@ -82,7 +82,6 @@ export const leaveConversation = async (id) => {
     }
 };
 
-
 export const getConversationFromFriend = async (id) => {
     try {
         const res = await api.get(`/conversation/${id}/getConversation`);

@@ -2,7 +2,7 @@ import InputArea from "./InputArea";
 import Chat from "./Chat";
 import { useEffect, useState } from "react";
 import { sendMessage } from "../../utils/apiCalls";
-import { getMessages } from "../../utils/data/data";
+import { defaultProfilePictureUrl, getMessages } from "../../utils/data/data";
 
 const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
     const [messages, setMessages] = useState([]);
@@ -58,12 +58,12 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
                 <>
                     <div className="z-10 sticky top-0 w-full h-16 px-8 flex items-center gap-5 bg-white/20 backdrop-blur-2xl rounded-b-3xl">
                         <img
-                            src={currConversation.imageUrl || "/default-avatar.png"}
+                            src={currConversation.imageUrl || defaultProfilePictureUrl}
                             className="h-12 w-12 rounded-full object-cover"
                             alt={currConversation.name}
                         />
                         <h2 className="text-xl text-white">
-                            {currConversation.name}
+                            {currConversation.name || "Unnamed Conversation"}
                         </h2>
 
                         <button
@@ -75,7 +75,7 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
                     </div>
 
                     <div className="relative z-10 flex-1 min-h-0 flex flex-col">
-                        <Chat chats={messages} sender={profile?.friendId} />
+                        <Chat chats={messages} userId={profile.userId} />
                         <InputArea handleSendMessage={handleSendMessage} />
                     </div>
                 </>

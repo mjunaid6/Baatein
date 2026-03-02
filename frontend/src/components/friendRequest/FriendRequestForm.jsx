@@ -23,7 +23,7 @@ const FriendRequestForm = ({ friendRequestForm, setFriendRequestForm }) => {
 
       await addFriend(friendId);
 
-      setMessage(resp.data || "Friend request sent successfully.");
+      setMessage("Friend request sent successfully.");
       setFriendId("");
 
       setTimeout(() => {

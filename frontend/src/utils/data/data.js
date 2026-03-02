@@ -49,3 +49,5 @@ export const getMessages = async (id) => {
         throw err;
     }
 };
+
+export const defaultProfilePictureUrl = "/pictures/default_profile_pic.png"
