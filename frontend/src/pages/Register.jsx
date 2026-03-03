@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {useAuth} from "../auth/AuthContext";
-import api from "../auth/api";
 import { Link, useNavigate } from "react-router-dom";
 import { setToken } from "../auth/authToken";
+import { registerUser } from "../utils/authAPICalls";
 
 const Register = () => {
     const { setAccessToken, setRole } = useAuth();
@@ -25,15 +25,11 @@ const Register = () => {
         }
 
         try{
-            const resp = await api.post("/auth/signup", {
-                "username": username,
-                "email": email,
-                "password": password
-            })
+            const data = await registerUser(username, email, password);
 
-            setAccessToken(resp.data.accessToken);
-            setToken(resp.data.accessToken);
-            setRole(resp.data.role);
+            setAccessToken(data.accessToken);
+            setToken(data.accessToken);
+            setRole(data.role);
 
             navigate("/chat");
         } catch (err) {

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import api from "../auth/api";
 import {useAuth} from "../auth/AuthContext";
 import BG from "../components/styles/BG";
 import { useState } from "react";
 import { setToken } from "../auth/authToken";
+import { loginUser } from "../utils/authAPICalls";
 
 const Login = () => {
 
@@ -24,14 +24,11 @@ const Login = () => {
             return;
         }
         try{
-            const resp = await api.post("/auth/login", {
-                "email": email,
-                "password": password
-            })
+            const data = await loginUser(email, password);
 
-            setAccessToken(resp.data.accessToken);
-            setToken(resp.data.accessToken);
-            setRole(resp.data.role);
+            setAccessToken(data.accessToken);
+            setToken(data.accessToken);
+            setRole(data.role);
             
             navigate("/chat")
         } catch (err) {
