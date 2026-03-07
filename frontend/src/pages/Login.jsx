@@ -4,7 +4,6 @@ import BG from "../components/styles/BG";
 import { useState } from "react";
 import { setToken } from "../auth/authToken";
 import { loginUser } from "../utils/authAPICalls";
-import { loginUser } from "../utils/authAPICalls";
 
 const Login = () => {
 
@@ -25,7 +24,6 @@ const Login = () => {
             return;
         }
         try{
-            const data = await loginUser(email, password);
             const data = await loginUser(email, password);
 
             setAccessToken(data.accessToken);
