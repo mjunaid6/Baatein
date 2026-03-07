@@ -63,4 +63,14 @@ public class RefreshTokenService {
                                         .orElseThrow(() -> new RuntimeException("Token not found"));
     }
 
+    public void deleteRefreshToken(String refreshToken) {
+        refreshTokenRepository.findById(refreshToken)
+                                .ifPresent((token) -> {
+                                        User user = token.getUser();
+                                        user.setRefreshToken(null);
+                                        userRepository.save(user);
+                                        refreshTokenRepository.deleteById(token.getToken());
+                                    }
+                                );
+    }
 }
