@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getAccessToken } from "./authToken";
+import { getAccessToken, setToken } from "./authToken";
+import { refreshToken } from "../utils/authAPICalls";
 
 const api = axios.create({
   baseURL: "http://localhost:8080",
@@ -27,11 +28,10 @@ api.interceptors.response.use(
       original._retry = true;
 
       try {
-        const resp = await api.post("/auth/refresh-token");
-        localStorage.setItem("accessToken", resp.data.accessToken);
+        const data = await refreshToken();
+        setToken(data.accessToken);
 
-        original.headers.Authorization =
-          `Bearer ${resp.data.accessToken}`;
+        original.headers.Authorization = `Bearer ${data.accessToken}`;
 
         return api(original);
       } catch {
