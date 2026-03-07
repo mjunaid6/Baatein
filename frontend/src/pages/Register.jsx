@@ -3,6 +3,7 @@ import {useAuth} from "../auth/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { setToken } from "../auth/authToken";
 import { registerUser } from "../utils/authAPICalls";
+import { registerUser } from "../utils/authAPICalls";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Register = () => {
         }
 
         try{
+            const data = await registerUser(username, email, password);
             const data = await registerUser(username, email, password);
 
             setAccessToken(data.accessToken);

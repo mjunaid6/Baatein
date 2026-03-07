@@ -25,23 +25,3 @@ export const registerUser = async (username, email, password) => {
         throw err;
     }
 };
-
-
-export const logout = async () => {
-  try {
-    await api.post("/auth/logout");
-  } catch (err) {
-    console.error("Logout failed:", err);
-    throw err;
-  }
-};
-
-export const refreshToken = async () => {
-    try {
-        const res = await api.post("/auth/refresh-token");
-        return res.data;
-    } catch (err) {
-        console.error("Refresh token failed:", err);
-        throw err;
-    }
-};
