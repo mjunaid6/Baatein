@@ -91,3 +91,19 @@ export const getConversationFromFriend = async (id) => {
         throw err;
     }
 };
+
+export const updateProfilePicture = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await api.post("/user/updateProfilePicture", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data" 
+            }
+        });
+        return res.data.imgUrl;
+    } catch (err) {
+        console.error("Updating profile picture failed:", err);
+        throw err;
+    }   
+};

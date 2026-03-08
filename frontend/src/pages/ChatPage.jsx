@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatArea from "../components/chatting/ChatArea";
 import BG from "../components/styles/BG";
 import SideBar from "../components/SideBar";
@@ -15,6 +15,7 @@ const ChatPage = () => {
 
     const fetchProfile = async () => {
         const data = await getProfile();
+        if(data.imgUrl != null) data.imgUrl = import.meta.env.VITE_BASE_IMAGE_URL + data.imgUrl;
         setProfile(data);
     }
 

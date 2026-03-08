@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 "/auth/signup",
                                 "/auth/login",
                                 "/auth/refresh-token",
-                                "/auth/logout"
+                                "/auth/logout",
+                                "/files/profilePic/*"
                             ).permitAll()
                             .anyRequest()
                             .authenticated()
