@@ -23,14 +23,16 @@ const ChatPage = () => {
         <div className="relative w-screen h-screen overflow-hidden flex">
             <BG/>
             <div className="w-[25vw] h-screen relative overflow-hidden">
-                <SideBar 
-                    sideBar={sideBar}
-                    setSideBar={setSideBar}
-                    currConversation={currConversation}
-                    setCurrConversation={setCurrConversation}
-                    profile={profile}
-                    setProfile={setProfile}
-                />
+                {
+                    sideBar && 
+                    <SideBar 
+                        setSideBar={setSideBar}
+                        currConversation={currConversation}
+                        setCurrConversation={setCurrConversation}
+                        profile={profile}
+                        setProfile={setProfile}
+                    />
+                }
             </div>
             <ChatArea currConversation={currConversation} setCurrConversation={setCurrConversation} profile={profile}/>
         </div>

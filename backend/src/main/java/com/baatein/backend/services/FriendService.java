@@ -90,6 +90,9 @@ public class FriendService {
 
         if (friendship.getStatus() == Friendship.Status.PENDING) throw new AccessDeniedException("Friendship still pending.");
 
+       if(friendship.getUser().getEmail().equals(userEmail)) conversationService.leaveConversationUsingFriendShip(friendship.getUser(), friendship.getFriend());
+       else conversationService.leaveConversationUsingFriendShip(friendship.getFriend(), friendship.getUser());
+
         friendship.getUser().getFriends().remove(friendship);
         friendship.getFriend().getFriends().remove(friendship);
 

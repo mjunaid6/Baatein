@@ -69,7 +69,7 @@ public class ConversationService {
 
     public void isPartOfConversation(String conversationCode, String email) {
         if (!conversationRepository
-                .existsByConversationCodeAndParticipantsEmail(conversationCode, email)) {
+                .existsByConversationCodeAndParticipantEmail(conversationCode, email)) {
             throw new IllegalArgumentException("Conversation not accessible");
         }
     }
@@ -123,5 +123,17 @@ public class ConversationService {
         }
     }
 
+    public void leaveConversationUsingFriendShip(User user, User friend) {
+        Conversation conversation = conversationRepository
+                .findPrivateConversation(user, friend)
+                .orElseThrow(() -> new EntityNotFoundException("Conversation not found"));
+
+        conversation.getParticipants().remove(user);
+        user.getConversations().remove(conversation);
+
+        if (conversation.getParticipants().isEmpty()) {
+            conversationRepository.delete(conversation);
+        }
+    }
 
 }

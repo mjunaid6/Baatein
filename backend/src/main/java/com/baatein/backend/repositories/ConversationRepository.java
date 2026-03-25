@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.baatein.backend.entities.Conversation;
 import com.baatein.backend.entities.User;
@@ -33,6 +34,13 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
     boolean existsByConversationCodeAndParticipantsUserId(String conversationCode, String userId);
 
-    boolean existsByConversationCodeAndParticipantsEmail(String conversationCode, String email);
+    @Query("""
+        SELECT COUNT(c) > 0 
+        FROM Conversation c 
+        JOIN c.participants p 
+        WHERE c.conversationCode = :code 
+        AND p.email = :email
+    """)
+    boolean existsByConversationCodeAndParticipantEmail(@Param("code") String code, @Param("email") String email);
 
 }

@@ -7,7 +7,7 @@ import NavBar from "./NavBar";
 import Profile from "./Profile";
 import SearchBar from "./SearchBar";
 
-const SideBar = ({ sideBar, setSideBar, currConversation, setCurrConversation, profile, setProfile }) => {
+const SideBar = ({setSideBar, currConversation, setCurrConversation, profile, setProfile }) => {
     const [friends, setFriends] = useState([]);
     const [conversations, setConversations] = useState([]);
     const [requests, setRequests] = useState([]);
@@ -36,7 +36,7 @@ const SideBar = ({ sideBar, setSideBar, currConversation, setCurrConversation, p
 
             <NavBar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-            {showSearch && <SearchBar setSideBar={setSideBar} />}
+            {showSearch && <SearchBar  />}
 
             <div className="flex-1 overflow-y-auto hide-scroll-bar p-2">
                 {activeTab === "conversations" && (
@@ -44,11 +44,11 @@ const SideBar = ({ sideBar, setSideBar, currConversation, setCurrConversation, p
                 )}
 
                 {activeTab === "friends" && (
-                    <FriendList friends={friends} setFriends={setFriends} sideBar={sideBar} setSideBar={setSideBar} currConversation={currConversation} setCurrConversation={setCurrConversation}/>
+                    <FriendList friends={friends} setFriends={setFriends}  currConversation={currConversation} setCurrConversation={setCurrConversation}/>
                 )}
 
                 {activeTab === "requests" && (
-                    <FriendRequest requests={requests} setRequests={setRequests} sideBar={sideBar} setSideBar={setSideBar}/>
+                    <FriendRequest requests={requests} setRequests={setRequests}/>
                 )}
 
                 {activeTab === "profile" && (

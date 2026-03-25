@@ -42,7 +42,7 @@ const FriendRequestCard = ({ id, name, imageUrl, handleAcceptedOrRejected }) => 
 
       <div className="w-16 h-full p-2">
         <img
-          src={imageUrl || defaultProfilePictureUrl}
+          src={imageUrl ? import.meta.env.VITE_BASE_IMAGE_URL + imageUrl : defaultProfilePictureUrl}
           alt={name}
           className="w-full h-full rounded-full object-cover"
         />

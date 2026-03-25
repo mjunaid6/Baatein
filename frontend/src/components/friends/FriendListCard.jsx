@@ -60,7 +60,7 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
       >
         <div className="w-16 h-full p-2">
           <img
-            src={imgUrl || defaultProfilePictureUrl}
+            src={imgUrl ? import.meta.env.VITE_BASE_IMAGE_URL + imgUrl : defaultProfilePictureUrl}
             alt={name}
             className="w-full h-full rounded-full object-cover"
           />

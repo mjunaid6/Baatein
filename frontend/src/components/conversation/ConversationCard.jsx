@@ -49,11 +49,11 @@ const ConversationCard = ({
                    hover:bg-purple-100 shadow-xl 
                    cursor-pointer transition"
       >
-        <div className="w-16 h-full p-2">
+        <div className="w-20 h-full p-2">
           <img
-            src={imgUrl || defaultProfilePictureUrl}
+            src={imgUrl ? import.meta.env.VITE_BASE_IMAGE_URL + imgUrl : defaultProfilePictureUrl}
             alt={name}
-            className="w-full h-full rounded-full object-cover"
+            className="w-full h-fit rounded-full object-cover"
           />
         </div>
 
