@@ -1,36 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ConversationCard from "./ConversationCard";
-import useWebSocket from "../../websockets/useWebSocket";
 
 const ConversationList = ({ conversations, setConversations, currConversation, setCurrConversation }) => {
     const [activeType, setActiveType] = useState("private");
 
-    const { subscribeToNotifications } = useWebSocket();
-    
-    useEffect(() => {
-        subscribeToNotifications((data) => {
-            setConversations((prev) => {
-            const updated = [...prev];
-
-            const index = updated.findIndex(
-                (c) => c.conversationId === data.conversationId
-            );
-
-            if (index === -1) return prev;
-
-            const convo = updated[index];
-
-            const updatedConvo = {
-                ...convo,
-                lastMessage: data.content,
-            };
-
-            updated.splice(index, 1);
-
-            return [updatedConvo, ...updated];
-            });
-        });
-    }, []);
 
     const onLeave = (id) => {
         if (currConversation?.conversationId === id) {
@@ -101,6 +74,7 @@ const ConversationList = ({ conversations, setConversations, currConversation, s
                         lastMessage={conv.lastMessage}
                         onSelect={() => handleConversationSelect(conv)}
                         onLeave={onLeave}
+                        canMessage={conv.canMessage}
                     />
                 ))}
             </div>

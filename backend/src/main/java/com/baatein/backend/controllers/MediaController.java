@@ -20,12 +20,8 @@ public class MediaController {
 
     @GetMapping("/profilePic/{filename}")
     public ResponseEntity<Resource> getProfilePic(@PathVariable String filename) {
-        
-        System.out.println("In controller : " + filename);
 
         Resource file = profilePicStorageService.loadAsResource(filename);
-        
-        System.out.println("done");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")

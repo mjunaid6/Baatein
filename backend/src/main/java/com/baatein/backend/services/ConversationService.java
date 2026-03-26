@@ -38,28 +38,35 @@ public class ConversationService {
         return new ConversationListDTO(conversationDTOs);
     }
 
-    private ConversationDTO mapToDTO(Conversation conversation, String email) {
+    public ConversationDTO mapToDTO(Conversation conversation, String email) {
 
         ConversationDTO dto = new ConversationDTO();
 
         dto.setConversationId(conversation.getConversationCode());
-        dto.setType(conversation.getType());
+        dto.setType(conversation.getType().name());
+
+        User user1 = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (conversation.getType() == Conversation.Type.PRIVATE) {
-
             User otherUser = conversation.getParticipants()
-                    .stream()
-                    .filter(user -> !user.getEmail().equals(email))
-                    .findFirst()
-                    .orElse(null);
-
+            .stream()
+            .filter(user -> !user.getEmail().equals(email))
+            .findFirst()
+            .orElse(null);
+            
             if (otherUser != null) {
                 dto.setName(otherUser.getUserName());
                 dto.setImgUrl(otherUser.getImgUrl());
+                dto.setCanMessage(
+                    friendshipRepository.existsBetweenUsers(user1, otherUser) &&
+                    !friendshipRepository.isFriendshipBlocked(user1, otherUser)
+                );
             }
 
         } 
         else {
+            dto.setCanMessage(false);
             dto.setName(conversation.getName());
             dto.setImgUrl(conversation.getImgUrl());
         }

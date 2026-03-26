@@ -19,4 +19,5 @@ public class MessageDTO {
     private String messageId;
     private String senderId;
     private String content;
+    private String conversationId;
 }

@@ -9,7 +9,8 @@ const ConversationCard = ({
   lastMessage,
   type,
   onSelect,
-  onLeave
+  onLeave,
+  canMessage
 }) => {
   const [options, setOptions] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null); 
@@ -63,10 +64,10 @@ const ConversationCard = ({
           </h2>
           <p
             className={`text-sm truncate ${
-              lastMessage ? "text-green-500" : "text-gray-500"
+              lastMessage && !canMessage ? "text-green-500" : "text-gray-500"
             }`}
           >
-            {lastMessage || "No new messages"}
+            {!canMessage ? "Can't message" : lastMessage || "No messages yet"}
           </p>
         </div>
 

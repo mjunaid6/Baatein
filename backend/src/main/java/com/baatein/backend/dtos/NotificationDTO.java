@@ -1,4 +1,6 @@
-package com.baatein.backend.dtos.conversationDTOs;
+package com.baatein.backend.dtos;
+
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,11 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConversationDTO {
-    private String conversationId;
+public class NotificationDTO<T> {
     private String type;
-    private String name;
-    private String imgUrl;
-    private String lastMessage = "";
-    private boolean canMessage;
+    private T payload;
+    private LocalDateTime timestamp;
 }

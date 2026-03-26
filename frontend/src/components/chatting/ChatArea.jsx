@@ -94,7 +94,12 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
 
                     <div className="relative z-10 flex-1 min-h-0 flex flex-col">
                         <Chat chats={messages} userId={profile.userId} handleDeleteMessage={handleDeleteMessage} />
-                        <InputArea handleSendMessage={handleSendMessage} />
+                        {!currConversation.canMessage ? (
+                            <div className="p-4 text-center text-red-500">
+                                You can't send messages in this conversation because either the conversation is blocked or you are no longer a member.
+                            </div>
+                        ) : <InputArea handleSendMessage={handleSendMessage} />
+                        }
                     </div>
                 </>
             )}

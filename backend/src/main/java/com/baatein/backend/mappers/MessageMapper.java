@@ -12,8 +12,9 @@ import com.baatein.backend.entities.Message;
 public interface MessageMapper {
     @Mapping(source = "sender.friendCode", target = "senderId")
     @Mapping(source = "messageCode", target = "messageId")
-    
+    @Mapping(source = "conversation.conversationCode", target = "conversationId")
     @Mapping(target = "type", constant = "MESSAGE")
+    
     MessageDTO toDTO(Message message);
     List<MessageDTO> toDTO(List<Message> message);
 }

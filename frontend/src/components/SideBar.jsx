@@ -6,6 +6,7 @@ import FriendList from "./friends/FriendList";
 import NavBar from "./NavBar";
 import Profile from "./Profile";
 import SearchBar from "./SearchBar";
+import { useSocketEvents } from "../websockets/useSocketEvents";
 
 const SideBar = ({setSideBar, currConversation, setCurrConversation, profile, setProfile }) => {
     const [friends, setFriends] = useState([]);
@@ -16,6 +17,14 @@ const SideBar = ({setSideBar, currConversation, setCurrConversation, profile, se
     useEffect(() => {
         fetchAllData();
     }, []);
+
+    useSocketEvents({
+        setConversations,
+        setFriends,
+        setRequests,
+        currConversation,
+        setCurrConversation,
+    });
 
     const fetchAllData = async () => {
         const [friendsRes, convRes, reqRes] = await Promise.all([

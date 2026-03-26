@@ -8,6 +8,10 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
   const [confirmAction, setConfirmAction] = useState(null); 
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    setBlocked(isBlocked === "blocked");
+  }, [isBlocked])
+
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -53,7 +57,10 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
   return (
     <>
       <div
-        onClick={onSelect}
+        onClick={() => {
+          if (blocked) return;
+          onSelect();
+        }}
         className="relative flex w-full h-16 gap-2 items-center mb-2 
                    border-2 border-purple-300 rounded-2xl 
                    cursor-pointer hover:bg-purple-100 shadow-xl"
@@ -66,9 +73,17 @@ const FriendListCard = ({ id, imgUrl, name, onSelect, isBlocked, onDelete }) => 
           />
         </div>
 
-        <h2 className="font-bold text-[20px] text-gray-600 w-[70%] truncate">
-          {name}
-        </h2>
+        <div className="flex flex-col w-[70%] truncate">
+          <h2 className="font-bold text-[20px] text-gray-600 truncate">
+            {name}
+          </h2>
+
+          {blocked && (
+            <span className="text-xs text-gray-500">
+              User is blocked
+            </span>
+          )}
+        </div>
 
         <i
           onClick={(e) => {

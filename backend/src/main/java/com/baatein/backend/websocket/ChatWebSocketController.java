@@ -30,5 +30,4 @@ public class ChatWebSocketController {
         System.out.println("Messageid received to dlete: " + " " + msgId);
         chatService.deleteMessage(msgId, email);
     }
-
 }

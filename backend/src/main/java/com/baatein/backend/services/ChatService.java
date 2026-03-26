@@ -1,10 +1,13 @@
 package com.baatein.backend.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
+import com.baatein.backend.dtos.NotificationDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageListDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageNotificationDTO;
@@ -29,6 +32,7 @@ public class ChatService {
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final FriendService friendService;
     private final MessageMapper messageMapper;
     private final ConversationService conversationService;
     private final CodeGenerationService codeGenerationService;
@@ -51,11 +55,22 @@ public class ChatService {
     
         conversationService.isPartOfConversation(messageRequestDTO.getConversationId(), email);
 
+        
+
         User sender = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-
         if(messageRequestDTO.getContent() == null || messageRequestDTO.getContent().isEmpty()) throw new IllegalArgumentException("Message is empty");
+        
+        if(conversation.getType().name().equals("PRIVATE")) {
+            User friend = getOtherParticipant(conversation, sender);
+            if(friendService.isBlockedFriendship(sender, friend)) {
+                throw new ResourceAccessException("Friend is blocked");
+            }
+            if (!friendService.areFriends(sender, friend)) {
+                throw new ResourceAccessException("You are no longer friends.");
+            }
+        }
 
         Message message = new Message();
         message.setConversation(conversation);
@@ -77,7 +92,15 @@ public class ChatService {
 
         for(User user : conversation.getParticipants()) {
             if(user.getEmail().equals(email)) continue;
-            messagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", messageNotificationDTO);
+            messagingTemplate.convertAndSendToUser(
+                                                user.getEmail(),
+                                                "/queue/notifications",
+                                                new NotificationDTO<MessageNotificationDTO>(
+                                                                "NEW MESSAGE",
+                                                                messageNotificationDTO,
+                                                                LocalDateTime.now()
+                                                )
+            );
         }
         
     }
@@ -101,5 +124,13 @@ public class ChatService {
             "/topic/conversation/" + conversationId,
             new DeleteEvent("DELETE", messageCode)
         );
+    }
+
+    public User getOtherParticipant(Conversation conversation, User user) {
+        return conversation.getParticipants()
+        .stream()
+        .filter(u -> !u.getEmail().equals(user.getEmail()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Invalid conversation"));
     }
 }

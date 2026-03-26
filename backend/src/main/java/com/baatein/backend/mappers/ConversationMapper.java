@@ -12,6 +12,7 @@ import com.baatein.backend.entities.Conversation;
 public interface ConversationMapper {
     @Mapping(source = "conversationCode", target = "conversationId")
     @Mapping(target = "lastMessage", ignore = true)
+    @Mapping(target = "canMessage", ignore = true)
     public ConversationDTO toDTO(Conversation conversation);
     public List<ConversationDTO> toDTO(List<Conversation> conversation);
 }

@@ -3,14 +3,18 @@ package com.baatein.backend.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.baatein.backend.dtos.NotificationDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendDTO;
 import com.baatein.backend.dtos.friendDTOs.FriendRequestDTO;
+import com.baatein.backend.entities.Conversation;
 import com.baatein.backend.entities.Friendship;
 import com.baatein.backend.entities.User;
 import com.baatein.backend.repositories.FriendshipRepository;
@@ -27,6 +31,7 @@ public class FriendService {
     private final UserRepository userRepository;
     private final CodeGenerationService codeGenerationService;
     private final ConversationService conversationService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public List<FriendDTO> getFriendsUsingEmail(String email) {
         if(email == null) return new ArrayList<>();
@@ -57,6 +62,14 @@ public class FriendService {
         return friendRequests;
     }
 
+    public boolean isBlockedFriendship(User user1, User user2) {
+        return friendshipRepository.isFriendshipBlocked(user1, user2);
+    }
+
+    public boolean areFriends(User user1, User user2) {
+        return friendshipRepository.existsBetweenUsers(user1, user2);
+    }
+
     public void addFriend(String friendCode, String userEmail) {
         User user = userRepository
                                 .findByEmail(userEmail)
@@ -78,6 +91,20 @@ public class FriendService {
                                                 LocalDateTime.now());
 
         friendshipRepository.save(friendship);
+
+        messagingTemplate.convertAndSendToUser(
+                                        friend.getEmail(),
+                                        "/queue/notifications",
+                                        new NotificationDTO<FriendRequestDTO>(
+                                            "FRIEND REQUEST",
+                                            new FriendRequestDTO(
+                                                            friendship.getFriendshipCode(), 
+                                                            user.getUserName(), 
+                                                            user.getImgUrl()
+                                            ),
+                                            LocalDateTime.now()
+                                        )
+        );
     }
 
     public void deleteFriend(String userEmail, String friendshipCode) {
@@ -90,13 +117,24 @@ public class FriendService {
 
         if (friendship.getStatus() == Friendship.Status.PENDING) throw new AccessDeniedException("Friendship still pending.");
 
-       if(friendship.getUser().getEmail().equals(userEmail)) conversationService.leaveConversationUsingFriendShip(friendship.getUser(), friendship.getFriend());
-       else conversationService.leaveConversationUsingFriendShip(friendship.getFriend(), friendship.getUser());
-
+        User friend = null;
+        if(friendship.getUser().getEmail().equals(userEmail)) friend = friendship.getFriend();
+        else friend = friendship.getUser();
+    
         friendship.getUser().getFriends().remove(friendship);
         friendship.getFriend().getFriends().remove(friendship);
 
-        friendshipRepository.delete(friendship);
+        friendshipRepository.delete(friendship);     
+        
+        messagingTemplate.convertAndSendToUser(
+                                            friend.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String, String>>(
+                                                "FRIEND REMOVED",
+                                                Map.of("friendshipId", friendshipCode),
+                                                LocalDateTime.now()
+                                            )   
+        );
     }
 
     public void acceptRequest(String email, String friendshipCode) {
@@ -114,7 +152,43 @@ public class FriendService {
         friendship.setStatus(Friendship.Status.FRIENDS);
         friendshipRepository.save(friendship);
 
-        conversationService.getOrCreatePrivateConversation(user, friend);
+        Conversation convo = conversationService.getOrCreatePrivateConversation(user, friend);
+
+        messagingTemplate.convertAndSendToUser(
+                                            user.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,Object>>(
+                                                "FRIEND ADDED",
+                                                Map.of(
+                                                    "friend", new FriendDTO(
+                                                                    friendshipCode,
+                                                                    friend.getUserName(),
+                                                                    friend.getImgUrl(),
+                                                                    "unblocked"
+                                                                ),
+                                                    "conversation", conversationService.mapToDTO(convo, user.getEmail())
+                                                ),
+                                                LocalDateTime.now()
+                                            )   
+        );
+
+        messagingTemplate.convertAndSendToUser(
+                                            friend.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,Object>>(
+                                                "FRIEND ADDED",
+                                                Map.of(
+                                                    "friend", new FriendDTO(
+                                                                    friendshipCode,
+                                                                    user.getUserName(),
+                                                                    user.getImgUrl(),
+                                                                    "unblocked"
+                                                                ),
+                                                    "conversation", conversationService.mapToDTO(convo, friend.getEmail())
+                                                ),
+                                                LocalDateTime.now()
+                                            ) 
+        );
     }
 
     public void rejectRequest(String email, String friendshipCode) {
@@ -130,6 +204,20 @@ public class FriendService {
         friendship.getFriend().getFriends().remove(friendship);
 
         friendshipRepository.delete(friendship);
+
+        User friend = null;
+        if(friendship.getUser().getEmail().equals(email)) friend = friendship.getFriend();
+        else friend = friendship.getUser();
+
+        messagingTemplate.convertAndSendToUser(
+                                            friend.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,String>>(
+                                                "FRIEND REQUEST REJECTED",
+                                                Map.of("friendshipId", friendshipCode),
+                                                LocalDateTime.now()
+                                            )   
+        );
     }
 
     public void blockFriend(String userEmail, String friendshipCode) {
@@ -151,6 +239,36 @@ public class FriendService {
         friendship.setBlockedBy(user);
 
         friendshipRepository.save(friendship);
+
+        User friend = null;
+        if(friendship.getUser().getEmail().equals(userEmail)) friend = friendship.getFriend();
+        else friend = friendship.getUser();
+
+        messagingTemplate.convertAndSendToUser(
+                                            user.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,String>>(
+                                                "FRIEND BLOCKED",
+                                                Map.of(
+                                                    "friendshipId", friendshipCode,
+                                                    "conversationId", conversationService.getOrCreatePrivateConversation(user, friend).getConversationCode()
+                                                ),
+                                                LocalDateTime.now()
+                                            )
+        );   
+        
+        messagingTemplate.convertAndSendToUser(
+                                            friend.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,String>>(
+                                                "FRIEND BLOCKED",
+                                                Map.of(
+                                                    "friendshipId", friendshipCode,
+                                                    "conversationId", conversationService.getOrCreatePrivateConversation(user, friend).getConversationCode()
+                                                ),
+                                                LocalDateTime.now()
+                                            )
+        );   
     }
 
     public void unBlockFriend(String userEmail, String friendshipCode) {
@@ -166,5 +284,41 @@ public class FriendService {
         friendship.setBlockedBy(null);
 
         friendshipRepository.save(friendship);
+
+        User user = null, friend = null;
+        if(friendship.getUser().getEmail().equals(userEmail)) {
+            user = friendship.getUser();
+            friend = friendship.getFriend();
+        }
+        else {
+            user = friendship.getFriend();
+            friend = friendship.getUser();
+        }
+
+        messagingTemplate.convertAndSendToUser(
+                                            friend.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,String>>(
+                                                "FRIEND UNBLOCKED",
+                                                Map.of(
+                                                    "friendshipId", friendshipCode,
+                                                    "conversationId", conversationService.getOrCreatePrivateConversation(user, friend).getConversationCode()
+                                                ),
+                                                LocalDateTime.now()
+                                            )   
+        );   
+
+        messagingTemplate.convertAndSendToUser(
+                                            user.getEmail(),
+                                            "/queue/notifications",
+                                            new NotificationDTO<Map<String,String>>(
+                                                "FRIEND UNBLOCKED",
+                                                Map.of(
+                                                    "friendshipId", friendshipCode,
+                                                    "conversationId", conversationService.getOrCreatePrivateConversation(user, friend).getConversationCode()
+                                                ),
+                                                LocalDateTime.now()
+                                            )   
+        );   
     }
 }

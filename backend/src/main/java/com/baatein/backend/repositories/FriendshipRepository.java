@@ -40,4 +40,16 @@ public interface FriendshipRepository extends JpaRepository<Friendship,String> {
             (f.user = :user2 AND f.friend = :user1)
     """)
     boolean existsBetweenUsers(User user1, User user2);
+
+    @Query("""
+        SELECT COUNT(f) > 0
+        FROM Friendship f
+        WHERE 
+            ((f.user = :user1 AND f.friend = :user2)
+            OR
+            (f.user = :user2 AND f.friend = :user1))
+            AND
+            f.status = com.baatein.backend.entities.Friendship.Status.BLOCKED
+    """)
+    boolean isFriendshipBlocked(User user1, User user2);
 }
