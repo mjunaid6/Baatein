@@ -24,6 +24,12 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
         fetchMessages();
 
         const handleNewMessage = (message) => {
+            if (message.type === "DELETE") {
+                setMessages((prev) =>
+                prev.filter((msg) => msg.messageId !== message.messageId)
+                );
+                return;
+            }
             setMessages((prev) => [...prev, message]);
         };
 
@@ -41,6 +47,10 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
             content: content,
             conversationId: currConversation.conversationId,
         });
+    };
+
+    const handleDeleteMessage = (messageId) => {
+        sendMessage(messageId, "/app/deleteMessage");
     };
 
     useEffect(() => {
@@ -66,7 +76,7 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
                 <>
                     <div className="z-10 sticky top-0 w-full h-16 px-8 flex items-center gap-5 bg-white/20 backdrop-blur-2xl rounded-b-3xl">
                         <img
-                            src={currConversation.imageUrl || defaultProfilePictureUrl}
+                            src={currConversation.imgUrl ? import.meta.env.VITE_BASE_IMAGE_URL + currConversation.imgUrl : defaultProfilePictureUrl}
                             className="h-12 w-12 rounded-full object-cover"
                             alt={currConversation.name}
                         />
@@ -83,7 +93,7 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
                     </div>
 
                     <div className="relative z-10 flex-1 min-h-0 flex flex-col">
-                        <Chat chats={messages} userId={profile.userId} />
+                        <Chat chats={messages} userId={profile.userId} handleDeleteMessage={handleDeleteMessage} />
                         <InputArea handleSendMessage={handleSendMessage} />
                     </div>
                 </>

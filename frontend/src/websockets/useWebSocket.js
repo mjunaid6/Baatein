@@ -69,11 +69,11 @@ const useWebSocket = () => {
     } 
   };
 
-  const sendMessage = (message) => {
+  const sendMessage = (message, destination = "/app/sendMessage") => {
     if (!clientRef.current || !clientRef.current.connected) return;
 
     clientRef.current.publish({
-      destination: "/app/sendMessage",
+      destination,
       body: JSON.stringify(message),
     });
   };

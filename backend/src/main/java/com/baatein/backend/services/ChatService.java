@@ -9,6 +9,7 @@ import com.baatein.backend.dtos.chatDTOs.MessageDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageListDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageNotificationDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageRequestDTO;
+import com.baatein.backend.dtos.chatDTOs.events.DeleteEvent;
 import com.baatein.backend.entities.Conversation;
 import com.baatein.backend.entities.Message;
 import com.baatein.backend.entities.User;
@@ -53,6 +54,9 @@ public class ChatService {
         User sender = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+
+        if(messageRequestDTO.getContent() == null || messageRequestDTO.getContent().isEmpty()) throw new IllegalArgumentException("Message is empty");
+
         Message message = new Message();
         message.setConversation(conversation);
         message.setSender(sender);
@@ -78,14 +82,24 @@ public class ChatService {
         
     }
 
+    @Transactional
     public void deleteMessage(String messageCode, String email) {
         Message message = messageRepository.findByMessageCode(messageCode)
                 .orElseThrow(() -> new IllegalArgumentException("Message not found"));
+
+        String conversationId = message.getConversation().getConversationCode();
+
+        conversationService.isPartOfConversation(conversationId, email);
 
         if (!message.getSender().getEmail().equals(email)) {
             throw new IllegalArgumentException("Cannot delete others' messages");
         }
 
         messageRepository.delete(message);
+
+        messagingTemplate.convertAndSend(
+            "/topic/conversation/" + conversationId,
+            new DeleteEvent("DELETE", messageCode)
+        );
     }
 }

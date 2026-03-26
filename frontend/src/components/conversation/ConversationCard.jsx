@@ -53,7 +53,7 @@ const ConversationCard = ({
           <img
             src={imgUrl ? import.meta.env.VITE_BASE_IMAGE_URL + imgUrl : defaultProfilePictureUrl}
             alt={name}
-            className="w-full h-fit rounded-full object-cover"
+            className="w-full h-full rounded-full object-cover"
           />
         </div>
 

@@ -22,4 +22,13 @@ public class ChatWebSocketController {
         chatService.sendMessage(email, dto);
     }
 
+    @MessageMapping("/deleteMessage")
+    public void deleteMessage(String msgId, Principal principal) {
+        String email = principal.getName();
+
+        msgId = msgId.substring(1, msgId.length()-1);
+        System.out.println("Messageid received to dlete: " + " " + msgId);
+        chatService.deleteMessage(msgId, email);
+    }
+
 }

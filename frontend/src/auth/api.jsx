@@ -7,6 +7,17 @@ const api = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) {
@@ -16,26 +27,46 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  res => res,
-  async error => {
-    const original = error.config;
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
     if (
-      error.response?.status === 401 &&
-      !original._retry &&
-      !original.url.includes("/auth/refresh-token")
+      error.response?.status === 403 &&
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/refresh-token")
     ) {
-      original._retry = true;
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              resolve(api(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        const data = await refreshToken();
-        setToken(data.accessToken);
+        const data = await refreshToken(); 
+        const newToken = data.accessToken;
 
-        original.headers.Authorization = `Bearer ${data.accessToken}`;
+        setToken(newToken);
 
-        return api(original);
-      } catch {
-        return Promise.reject(error);
+        processQueue(null, newToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return api(originalRequest);
+
+      } catch (err) {
+        processQueue(err, null);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
       }
     }
 
