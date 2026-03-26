@@ -44,8 +44,9 @@ public class ChatController {
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
-
-        chatService.sendMessage(email, dto, conversationId);
+        
+        dto.setConversationId(conversationId);
+        chatService.sendMessage(email, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -18,5 +18,5 @@ public class ConversationDTO {
     private Conversation.Type type;
     private String name;
     private String imgUrl;
-    private String lastMessage;
+    private String lastMessage = "";
 }

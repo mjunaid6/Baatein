@@ -11,6 +11,7 @@ import com.baatein.backend.entities.Conversation;
 @Mapper(componentModel = "spring")
 public interface ConversationMapper {
     @Mapping(source = "conversationCode", target = "conversationId")
+    @Mapping(target = "lastMessage", ignore = true)
     public ConversationDTO toDTO(Conversation conversation);
     public List<ConversationDTO> toDTO(List<Conversation> conversation);
 }

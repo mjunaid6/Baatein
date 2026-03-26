@@ -2,9 +2,12 @@ package com.baatein.backend.services;
 
 import java.util.List;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import com.baatein.backend.dtos.chatDTOs.MessageDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageListDTO;
+import com.baatein.backend.dtos.chatDTOs.MessageNotificationDTO;
 import com.baatein.backend.dtos.chatDTOs.MessageRequestDTO;
 import com.baatein.backend.entities.Conversation;
 import com.baatein.backend.entities.Message;
@@ -15,6 +18,7 @@ import com.baatein.backend.repositories.MessageRepository;
 import com.baatein.backend.repositories.UserRepository;
 import com.baatein.backend.util.CodeGenerationService;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -27,6 +31,7 @@ public class ChatService {
     private final MessageMapper messageMapper;
     private final ConversationService conversationService;
     private final CodeGenerationService codeGenerationService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public MessageListDTO getMessagesFromConversation(String conversationCode, String email) {
         conversationService.isPartOfConversation(conversationCode, email);
@@ -37,12 +42,13 @@ public class ChatService {
         return new MessageListDTO(messageMapper.toDTO(messages));
     }
 
-    public void sendMessage(String email, MessageRequestDTO messageRequestDTO, String conversationId) {
+    @Transactional
+    public void sendMessage(String email, MessageRequestDTO messageRequestDTO) {
         Conversation conversation = conversationRepository
-                .findByConversationCode(conversationId)
+                .findByConversationCode(messageRequestDTO.getConversationId())
                 .orElseThrow(() -> new IllegalArgumentException("Conversation not found"));
     
-        conversationService.isPartOfConversation(conversationId, email);
+        conversationService.isPartOfConversation(messageRequestDTO.getConversationId(), email);
 
         User sender = userRepository.findByEmail(email)
                                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -54,6 +60,22 @@ public class ChatService {
         message.setContent(messageRequestDTO.getContent());
 
         messageRepository.save(message);
+
+        MessageDTO messageDTO = messageMapper.toDTO(message);
+
+        messagingTemplate.convertAndSend("/topic/conversation/"+messageRequestDTO.getConversationId(), messageDTO);
+
+        MessageNotificationDTO messageNotificationDTO = new MessageNotificationDTO(
+                                                                message.getContent().substring(0,Math.min(10, message.getContent().length())), 
+                                                                message.getTimeStamp(),
+                                                                conversation.getConversationCode()
+                                                            );
+
+        for(User user : conversation.getParticipants()) {
+            if(user.getEmail().equals(email)) continue;
+            messagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", messageNotificationDTO);
+        }
+        
     }
 
     public void deleteMessage(String messageCode, String email) {

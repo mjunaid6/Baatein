@@ -1,11 +1,13 @@
 import InputArea from "./InputArea";
 import Chat from "./Chat";
 import { useEffect, useState } from "react";
-import { sendMessage } from "../../utils/apiCalls";
 import { defaultProfilePictureUrl, getMessages } from "../../utils/data/data";
+import useWebSocket from "../../websockets/useWebSocket";
 
 const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
     const [messages, setMessages] = useState([]);
+
+    const { subscribeToConversation, sendMessage, unsubscribeFromConversation } = useWebSocket();
 
     useEffect(() => {
         if (!currConversation) return;
@@ -20,19 +22,25 @@ const ChatArea = ({ currConversation, setCurrConversation, profile }) => {
         };
 
         fetchMessages();
+
+        const handleNewMessage = (message) => {
+            setMessages((prev) => [...prev, message]);
+        };
+
+        subscribeToConversation(currConversation.conversationId, handleNewMessage);
+        
+        return () => {
+            unsubscribeFromConversation();
+        };
     }, [currConversation]);
 
-    const handleSendMessage = async (content) => {
+    const handleSendMessage = (content) => {
         if (!content?.trim()) return;
 
-        try {
-            await sendMessage(currConversation.conversationId, content);
-            
-            const updatedMessages = await getMessages(currConversation.conversationId);
-            setMessages(updatedMessages || []);
-        } catch (err) {
-            console.error("Failed to send message", err);
-        }
+        sendMessage({
+            content: content,
+            conversationId: currConversation.conversationId,
+        });
     };
 
     useEffect(() => {

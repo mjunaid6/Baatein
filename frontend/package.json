@@ -10,12 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.3.0",
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.10.1",
     "remixicon": "^4.7.0",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {

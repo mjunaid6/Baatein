@@ -61,8 +61,12 @@ const ConversationCard = ({
           <h2 className="font-bold text-[18px] text-gray-700 truncate">
             {name || (type === "GROUP" ? "Unnamed Group" : "Unknown User")}
           </h2>
-          <p className="text-sm text-gray-500 truncate">
-            {lastMessage || "No messages yet"}
+          <p
+            className={`text-sm truncate ${
+              lastMessage ? "text-green-500" : "text-gray-500"
+            }`}
+          >
+            {lastMessage || "No new messages"}
           </p>
         </div>
 
