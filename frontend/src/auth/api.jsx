@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getAccessToken, setToken } from "./authToken";
-import { authApi, refreshToken } from "../utils/authAPICalls";
+import { refreshToken } from "../utils/authAPICalls";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+  withCredentials: true,
 });
 
 let isRefreshing = false;
@@ -40,7 +41,7 @@ api.interceptors.response.use(
           failedQueue.push({
             resolve: (token) => {
               originalRequest.headers.Authorization = `Bearer ${token}`;
-              resolve(axios(originalRequest));
+              resolve(api(originalRequest));
             },
             reject,
           });
@@ -59,7 +60,7 @@ api.interceptors.response.use(
         processQueue(null, newToken);
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axios(originalRequest);
+        return api(originalRequest);
 
       } catch (err) {
         processQueue(err, null);

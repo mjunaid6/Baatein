@@ -13,7 +13,7 @@ const useWebSocket = () => {
 
   useEffect(() => {
     const socket = new SockJS(
-      "/ws"
+      import.meta.env.VITE_BACKEND_BASE_URL + "/ws"
     );
 
     const client = new Client({
