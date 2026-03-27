@@ -10,4 +10,19 @@ export default defineConfig({
   define: {
     global: 'window',
   },
+  server: {
+    host: true,
+    port: 5173,
+    proxy: {
+      "/auth": {
+        target: "http://10.71.139.32:8080",
+        changeOrigin: true,
+        secure: false,
+      },
+      "/ws": {
+        target: "ws://10.71.139.32:8080",
+        ws: true,
+      },
+    },
+  }
 })

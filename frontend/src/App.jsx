@@ -6,9 +6,23 @@ import AdminRoute from "./auth/AdminRoute"
 import RootRedirection from "./auth/redirections/RootRedirection"
 import RegisterRedirection from "./auth/redirections/RegisterRedirection"
 import LoginRedirection from "./auth/redirections/LoginRedirection"
+import { useEffect, useState } from "react"
 
 function App() {
+  const useIsMobile = () => {
+      const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+      useEffect(() => {
+          const handleResize = () => {
+              setIsMobile(window.innerWidth < 768);
+          };
+
+          window.addEventListener("resize", handleResize);
+          return () => window.removeEventListener("resize", handleResize);
+      }, []);
+
+      return isMobile;
+  };
   return (
     <>
       <Routes>
@@ -17,7 +31,7 @@ function App() {
         <Route path="/register" element={<RegisterRedirection/>} />
 
         <Route element={<ProtectedRoute/>}>
-          <Route path="/chat" element={<ChatPage/>}>
+          <Route path="/chat" element={<ChatPage useIsMobile={useIsMobile}/>}>
           </Route>
         </Route>
 

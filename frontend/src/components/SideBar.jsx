@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { getConversations, getFriendRequests, getFriends, getProfile } from "../utils/data/data";
 import ConversationList from "./conversation/ConversationList";
 import FriendRequest from "./friendRequest/FriendRequest";

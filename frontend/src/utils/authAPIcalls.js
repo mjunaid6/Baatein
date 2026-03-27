@@ -1,8 +1,13 @@
-import api from "../auth/api";
+import axios from "axios";
+
+export const authApi = axios.create({
+  baseURL: "",
+  withCredentials: true,
+});
 
 export const loginUser = async (email, password) => {
     try {
-        const res = await api.post("/auth/login", {
+        const res = await authApi.post("/auth/login", {
             "email": email,
             "password": password
         })
@@ -14,7 +19,7 @@ export const loginUser = async (email, password) => {
 };
 export const registerUser = async (username, email, password) => {
     try {
-        const res = await api.post("/auth/signup", {
+        const res = await authApi.post("/auth/signup", {
             "username": username,
             "email": email,
             "password": password
@@ -29,7 +34,7 @@ export const registerUser = async (username, email, password) => {
 
 export const logout = async () => {
   try {
-    await api.post("/auth/logout");
+    await authApi.post("/auth/logout");
   } catch (err) {
     console.error("Logout failed:", err);
     throw err;
@@ -38,7 +43,7 @@ export const logout = async () => {
 
 export const refreshToken = async () => {
     try {
-        const res = await api.post("/auth/refresh-token");
+        const res = await authApi.post("/auth/refresh-token");
         return res.data;
     } catch (err) {
         console.error("Refresh token failed:", err);

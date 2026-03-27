@@ -1,32 +1,32 @@
 package com.baatein.backend.auth.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
 
-    @Value("${refresh-token.expiry}")
-    private static long expiry;
-
     public static void addRefreshCookie(
             HttpServletResponse response,
             String refreshToken
     ) {
-        response.addHeader("Set-Cookie",
-            "refresh_token=" + refreshToken +
-            "; Path=/" +
-            "; HttpOnly" +
-            "; SameSite=Lax"
-        );
+        ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
+                                            .httpOnly(true)
+                                            .secure(false) 
+                                            .path("/")
+                                            .sameSite("Lax")
+                                            .maxAge(7 * 24 * 60 * 60)
+                                            .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
 
     public static void deleteRefreshToken(HttpServletResponse response) {
         Cookie cookie = new Cookie("refresh_token", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(0);
 
