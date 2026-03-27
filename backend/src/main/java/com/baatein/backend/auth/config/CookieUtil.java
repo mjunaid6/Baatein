@@ -1,7 +1,5 @@
 package com.baatein.backend.auth.config;
 
-// import org.springframework.http.ResponseCookie;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
