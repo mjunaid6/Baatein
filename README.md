@@ -334,6 +334,174 @@ Conversation Created
 Real-Time Update Sent
 ```
 
+# 📚 API Documentation
+
+Baatein follows a service-oriented backend architecture where APIs are organized by domain responsibility. The application exposes REST APIs for authentication, user management, friendships, conversations, messaging, and notifications, while WebSockets are used for real-time communication.
+
+---
+
+# 🔐 Authentication Service
+
+Handles user authentication, authorization, and session management using JWT and Refresh Tokens.
+
+| Method | Endpoint              | Description                                     |
+| ------ | --------------------- | ----------------------------------------------- |
+| POST   | `/auth/register`      | Register a new user account                     |
+| POST   | `/auth/login`         | Authenticate user and issue JWT access token    |
+| POST   | `/auth/refresh-token` | Generate a new access token using refresh token |
+| POST   | `/auth/logout`        | Logout user and invalidate session              |
+
+---
+
+# 👤 User Service
+
+Manages user profiles and account information.
+
+| Method | Endpoint                 | Description                           |
+| ------ | ------------------------ | ------------------------------------- |
+| GET    | `/user/getProfile`       | Retrieve authenticated user's profile |
+| POST   | `/user/updateProfilePic` | Upload or update profile picture      |
+
+---
+
+# 👥 Friendship Service
+
+Handles friend requests, friendship lifecycle management, and user relationships.
+
+| Method | Endpoint                         | Description                       |
+| ------ | -------------------------------- | --------------------------------- |
+| POST   | `/friend//{friendId}/addFriend`  | Send a friend request             |
+| GET    | `/friend/getFriendList`          | Retrieve all friends              |
+| GET    | `/friend/getFriendRequests`      | Retrieve incoming friend requests |
+| PUT    | `/friend/{friendshipId}/accept`  | Accept a friend request           |
+| PUT    | `/friend/{friendshipId}/reject`  | Reject a friend request           |
+| DELETE | `/friend/{friendshipId}/delete`  | Remove a friend                   |
+| PUT    | `/friend/{friendshipId}/block`   | Block a user                      |
+| PUT    | `/friend/{friendshipId}/unblock` | Unblock a user                    |
+
+### Friendship States
+
+| State   | Description                      |
+| ------- | -------------------------------- |
+| PENDING | Friend request awaiting response |
+| FRIENDS | Friend request accepted          |
+| BLOCKED | User blocked by another user     |
+
+---
+
+# 💬 Conversation Service
+
+Responsible for managing conversations between users.
+
+| Method | Endpoint                                  | Description                                   |
+| ------ | ----------------------------------------- | --------------------------------------------- |
+| GET    | `/conversation/getConversations`          | Retrieve all user conversations               |
+| GET    | `/conversation/code/{conversationCode}`   | Retrieve conversation using conversation code |
+| GET    | `/conversation/friend/{friendCode}`       | Get conversation associated with a friend     |
+| POST   | `/conversation/create`                    | Create a new conversation                     |
+| DELETE | `/conversation//{conversationCode}/leave` | Delete conversation                           |
+
+---
+
+# 📨 Message Service
+
+Handles chat messages and conversation history.
+
+| Method | Endpoint                                       | Description                                |
+| ------ | ---------------------------------------------- | ------------------------------------------ |
+| GET    | `/chat/{conversationId}/messages`              | Retrieve messages from a conversation      |
+| POST   | `/chat/{conversationId}/message`               | Send a new message                         |
+| PUT    | `/chat/message/{messageId}`                    | Edit an existing message                   |
+| DELETE | `/chat/message/{messageId}`                    | Delete a message                           |
+
+---
+
+# 🖼️ Media Service
+
+Handles profile picture storage and retrieval.
+
+| Method | Endpoint                      | Description             |
+| ------ | ----------------------------- | ----------------------- |
+| POST   | `files/profilePic/{filename}` | Upload profile picture  |
+
+---
+
+# ⚡ WebSocket Endpoints
+
+Baatein uses STOMP over WebSocket to enable real-time communication.
+
+## Connection Endpoint
+
+| Endpoint | Description                    |
+| -------- | ------------------------------ |
+| `/ws`    | Establish WebSocket connection |
+
+---
+
+## Client → Server Destinations
+
+Used when clients send real-time events to the server.
+
+| Destination                | Description               |
+| -------------------------- | ------------------------- |
+| `/app/sendMessage`         | Send chat message         |
+| `/app/friendRequest`       | Send friend request event |
+| `/app/acceptFriendRequest` | Accept friend request     |
+| `/app/notification`        | Send notification event   |
+
+---
+
+## Server → Client Topics
+
+Broadcast channels used for real-time updates.
+
+| Destination                            | Description                     |
+| -------------------------------------- | ------------------------------- |
+| `/topic/conversation/{conversationId}` | Receive conversation messages   |
+| `/topic/friends`                       | Receive friend list updates     |
+| `/topic/notifications`                 | Receive notification broadcasts |
+
+---
+
+## User-Specific Queues
+
+Private channels for delivering user-specific events.
+
+| Destination                   | Description                    |
+| ----------------------------- | ------------------------------ |
+| `/user/queue/messages`        | Receive private messages       |
+| `/user/queue/notifications`   | Receive personal notifications |
+| `/user/queue/friend-requests` | Receive friend request updates |
+| `/user/queue/conversations`   | Receive conversation updates   |
+
+---
+
+# 🔄 Real-Time Features Powered by WebSockets
+
+* Instant Message Delivery
+* Friend Request Notifications
+* Friend Acceptance Notifications
+* Conversation Updates
+* User-Specific Notifications
+* Live Synchronization Across Connected Clients
+
+---
+
+# 🚀 Planned Future Endpoints
+
+The following APIs are planned for future releases:
+
+| Feature           | Endpoint            |
+| ----------------- | ------------------- |
+| Group Chats       | `/group/*`          |
+| Message Reactions | `/message/reaction` |
+| Message Replies   | `/message/reply`    |
+| File Sharing      | `/file/upload`      |
+| Message Search    | `/search/messages`  |
+| Voice Calling     | `/call/*`           |
+| Video Calling     | `/video-call/*`     |
+
+
 ---
 
 ## 🚀 Installation
