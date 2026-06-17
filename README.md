@@ -4,6 +4,38 @@ A modern real-time messaging platform built with React, Spring Boot, MySQL, and 
 
 ---
 
+## 📑 Table of Contents
+
+* [📖 Overview](#-overview)
+* [✨ Features](#-features)
+* [🏗️ System Architecture](#️-system-architecture)
+* [🛠️ Tech Stack](#️-tech-stack)
+* [📂 Project Structure](#-project-structure)
+* [🗄️ Database Design](#️-database-design)
+* [🔐 Authentication Flow](#-authentication-flow)
+* [📡 WebSocket Architecture](#-websocket-architecture)
+* [🔄 Friend Request Workflow](#-friend-request-workflow)
+* [📚 API Documentation](#-api-documentation)
+
+  * [🔐 Authentication Service](#-authentication-service)
+  * [👤 User Service](#-user-service)
+  * [👥 Friendship Service](#-friendship-service)
+  * [💬 Conversation Service](#-conversation-service)
+  * [📨 Message Service](#-message-service)
+  * [🔔 Notification Service](#-notification-service)
+  * [🖼️ Media Service](#️-media-service)
+  * [⚡ WebSocket Endpoints](#-websocket-endpoints)
+* [🚀 Installation](#-installation)
+
+  * [Backend Setup](#backend-setup)
+  * [Frontend Setup](#frontend-setup)
+* [🔑 Key Engineering Challenges Solved](#-key-engineering-challenges-solved)
+* [📈 Future Enhancements](#-future-enhancements)
+* [🎯 Learning Outcomes](#-learning-outcomes)
+* [👨‍💻 Author](#-author)
+
+---
+
 ## 📖 Overview
 
 Baatein is a full-stack real-time chat application designed to provide a fast, reliable, and engaging communication experience. The platform combines modern frontend technologies with a robust backend architecture to deliver instant messaging, user presence management, friend interactions, and real-time updates.
